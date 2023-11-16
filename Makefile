@@ -25,6 +25,8 @@ refresh:
 	symfony console doctrine:fixtures:load --no-interaction
 dump:
 	symfony console doctrine:schema:create --dump-sql
+entity:
+	${SYMFONY_MAKE}entity
 
 #Test
 make-test:
