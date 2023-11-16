@@ -1,7 +1,7 @@
 # Docker
-docker-up:
+up:
 	docker compose up -d
-docker-down:
+down:
 	docker compose down
 
 MAKE =
@@ -10,20 +10,25 @@ SYMFONY_MAKE = ${SYMFONY_CONSOLE} make:${MAKE}
 
 
 #Symfony
-sf-start:
+start:
 	symfony server:start -d
-sf-stop:
+stop:
 	symfony server:stop
-sf-make:
+make:
 	${SYMFONY_MAKE}
-sf-migrate:
+migrate:
 	symfony console make:migration
 	symfony console doctrine:migrations:migrate --no-interaction
 
 #Doctrine
-dt-refresh:
+refresh:
 	symfony console doctrine:fixtures:load --no-interaction
-dt-dump:
+dump:
 	symfony console doctrine:schema:create --dump-sql
 
+#Test
+make-test:
+	${SYMFONY_MAKE}test
+test:
+	php bin/phpunit
 
