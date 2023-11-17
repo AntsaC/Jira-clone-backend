@@ -22,29 +22,30 @@ class ProjectRepository extends ServiceEntityRepository
         parent::__construct($registry, Project::class);
     }
 
-    public function findAllProject(?ProjectFilterDto $filterDto) {
-        $maxResults = 5 ;
-        return $this->createQueryBuilder('p')
+    public function findAllProject(ProjectFilterDto $filterDto)
+    {
+        $maxResults = 5;
+        $queryBuilder = $this->createQueryBuilder('p')
             ->select('p, t')
-            ->join('p.type', 't')
-            ->getQuery()
-            ->setFirstResult($this->computeCurrentPage($filterDto?->page, $maxResults))
+            ->join('p.type', 't');
+        if (isset($filterDto->keyword)) {
+            $queryBuilder->where('p.name like :keyword');
+            $queryBuilder->setParameter('keyword', '%'.$filterDto->keyword.'%');
+        }
+        if(isset($filterDto->type)) {
+            $queryBuilder->where('p.type in (:type)');
+            $queryBuilder->setParameter('type', $filterDto->type);
+        }
+        $queryBuilder->orderBy('p.name');
+        return $queryBuilder->getQuery()
+            ->setFirstResult($this->computeCurrentPage($filterDto->page, $maxResults))
             ->setMaxResults($maxResults)
             ->getResult();
     }
 
-    public function computeCurrentPage(?int $page, int $maxResult): int
+    public function computeCurrentPage(int $page, int $maxResult): int
     {
-        return (($page ?? 1) - 1) * $maxResult;
+        return ($page - 1) * $maxResult;
     }
 
-//    public function findOneBySomeField($value): ?Project
-//    {
-//        return $this->createQueryBuilder('p')
-//            ->andWhere('p.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
 }

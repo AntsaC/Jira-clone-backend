@@ -21,7 +21,7 @@ class ProjectController extends AbstractController
     #[Route('', methods: ['GET'])]
     public function index(#[MapQueryString] ?ProjectFilterDto $filter): JsonResponse
     {
-        return $this->json($this->repository->findAllProject($filter));
+        return $this->json($this->repository->findAllProject($filter ?? new ProjectFilterDto()));
     }
 
 }
