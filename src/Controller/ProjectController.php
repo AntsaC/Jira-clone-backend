@@ -38,4 +38,13 @@ class ProjectController extends AbstractController
         return $this->json($project, status: 201);
     }
 
+    #[Route('/{id}', methods: ['PUT'])]
+    public function update(int $id, #[MapRequestPayload] Project $project): JsonResponse
+    {
+        $currentProject = $this->repository->find($id);
+        $currentProject->setName($project->getName());
+        $this->entityManager->flush();
+        return $this->json($currentProject);
+    }
+
 }
