@@ -3,9 +3,9 @@
 namespace App\Entity;
 
 use App\Repository\ProjectRepository;
+use DateTimeInterface;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation\Timestampable;
 
 #[ORM\Entity(repositoryClass: ProjectRepository::class)]
 class Project
@@ -24,9 +24,18 @@ class Project
     #[ORM\ManyToOne]
     private ?ProjectType $type = null;
 
-    #[Timestampable(on: 'create')]
     #[ORM\Column(type: Types::DATE_MUTABLE)]
-    private ?\DateTimeInterface $createdAt = null;
+    private DateTimeInterface $createdAt;
+
+    public function __construct()
+    {
+        $this->createdAt = new \DateTime();
+    }
+
+    public function setCreatedAt(DateTimeInterface $createdAt): void
+    {
+        $this->createdAt = $createdAt;
+    }
 
     public function getId(): ?int
     {
@@ -74,10 +83,4 @@ class Project
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeInterface $createdAt): static
-    {
-        $this->createdAt = $createdAt;
-
-        return $this;
-    }
 }

@@ -7,6 +7,7 @@ use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
 class ProjectControllerTest extends ApiTestCase
 {
 
+
     public function testFindAll(): void
     {
         static::createClient()->request('GET', '/projects');
@@ -119,6 +120,17 @@ class ProjectControllerTest extends ApiTestCase
         self::assertJsonContains($expected);
     }
 
-
+    public function testCreateNewProject() {
+        self::createClient()->request('POST', 'projects', [
+            'json' => [
+                'name' => 'New project',
+                'key' => 'NEW',
+                'type' => [
+                    'id' => 1
+                ]
+            ]
+        ]);
+        self::assertResponseStatusCodeSame(201);
+    }
 
 }
