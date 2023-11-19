@@ -21,28 +21,13 @@ class UserStoryRepository extends ServiceEntityRepository
         parent::__construct($registry, UserStory::class);
     }
 
-//    /**
-//     * @return UserStory[] Returns an array of UserStory objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('u')
-//            ->andWhere('u.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('u.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
-
-//    public function findOneBySomeField($value): ?UserStory
-//    {
-//        return $this->createQueryBuilder('u')
-//            ->andWhere('u.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    public function findAllByProject(int $projectId)
+    {
+        return $this->createQueryBuilder('u')
+        ->select('u')
+        ->where('u.project = ?1 and u.sprint is null')
+        ->setParameter(1, $projectId)
+        ->getQuery()
+        ->getResult();
+    }
 }

@@ -12,16 +12,19 @@ values (1, 1, 'Project 1', 'PD1', '2023-10-10'),
        (6, 2, 'Qice 1', 'PD6', '2023-11-12'),
        (7, 2, 'Qice 2', 'PD7', '2023-11-13');
 
-insert into user_story(id, project_id, summary)
-values (1, 1, 'My first user story'),
-       (2, 1, 'My second user story'),
-       (3, 2, 'My third user story'),
-       (4, 3, 'My fourth user story'),
-       (5, 2, 'My fifth user story');
-
 insert into sprint(id, project_id, name, start_date, end_date)
 values (1, 1, 'PD1 Sprint 1', '2023-10-10', '2023-10-20'),
        (2, 1, 'PD1 Sprint 2', null, null);
+
+insert into user_story(id, project_id, summary, sprint_id)
+values (1, 1, 'My first user story', 1),
+       (2, 1, 'My second user story', 1),
+       (3, 2, 'My third user story', null),
+       (4, 3, 'My fourth user story', null),
+       (5, 2, 'My fifth user story', null),
+       (6, 1, 'Create new task', null),
+       (8, 1, 'Add new product', null);
+
 
 select setval('project_id_seq' , 100);
 select setval('project_type_id_seq' , 100);
