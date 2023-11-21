@@ -43,7 +43,7 @@ jobs:
       run: php bin/console doctrine:migrations:migrate --no-interaction
 
     - name: Refresh data
-      run: make refresh
+      run: php bin/console doctrine:fixtures:load --no-interaction
       
     - name: Execute tests (Unit and Feature tests) via PHPUnit
       env:
