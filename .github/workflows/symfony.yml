@@ -40,7 +40,13 @@ jobs:
       run: |
         mkdir -p data
         touch data/database.sqlite
-        
+
+    - name: Run migration
+      run: make migrate
+
+    - name: Refresh data
+      run: make refresh
+      
     - name: Execute tests (Unit and Feature tests) via PHPUnit
       env:
         DATABASE_URL: sqlite:///%kernel.project_dir%/data/database.sqlite
