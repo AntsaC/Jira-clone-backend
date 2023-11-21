@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Sprint;
+use App\Entity\SprintStatus;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -18,7 +19,7 @@ class SprintRepository extends ServiceEntityRepository
 {
     public function __construct(
         ManagerRegistry $registry,
-        private readonly ProjectRepository $projectRepository
+        private readonly ProjectRepository $projectRepository,
     )
     {
         parent::__construct($registry, Sprint::class);
@@ -29,9 +30,8 @@ class SprintRepository extends ServiceEntityRepository
             ->select('s, cards')
             ->leftJoin('s.cards','cards')
             ->where('s.project = :projectId')
-            ->andWhere(':currentDate between s.startDate and s.endDate')
+            ->andWhere('s.status = 2')
             ->setParameter('projectId', $projectId)
-            ->setParameter('currentDate', new \DateTime(), 'date')
             ->getQuery()
             ->getOneOrNullResult();
         if(!$currentSprint) {
@@ -46,6 +46,7 @@ class SprintRepository extends ServiceEntityRepository
         $project->incrementSprintIndex();
         $sprint = new Sprint();
         $sprint->setProject($project);
+        $sprint->setStatus($this->getEntityManager()->getReference(SprintStatus::class, 2));
         $sprint->initName();
         $this->getEntityManager()
             ->persist($sprint);

@@ -10,7 +10,7 @@ class SprintControllerTest extends ApiTestCase
 
     public function testFindCurrentSprint(): void
     {
-        static::createClient()->request('GET', self::URL_CURRENT_SPRINT);
+        $response = static::createClient()->request('GET', self::URL_CURRENT_SPRINT);
         $expected = [
             "id" => 2,
             "startDate" => '2023-11-20',
@@ -40,7 +40,7 @@ class SprintControllerTest extends ApiTestCase
     public function test_CurrentSprintNotStarted_WhenFindCurrentSprint() {
         static::createClient()->request('GET', '/projects/3/current-sprint');
         $expected = [
-            "name" => "PD2 Sprint 1"
+            "name" => "PD3 Sprint 2"
         ];
         $this->assertResponseIsSuccessful();
         $this->assertJsonContains($expected);
