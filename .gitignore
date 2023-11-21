@@ -23,3 +23,5 @@
 /.idea/
 ###< phpunit/phpunit ###
 
+compose.override.yaml
+
