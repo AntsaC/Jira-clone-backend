@@ -42,7 +42,7 @@ jobs:
         touch data/database.sqlite
 
     - name: Run migration
-      run: make migrate
+      run: php bin/console doctrine:migrations:migrate --no-interaction
 
     - name: Refresh data
       run: make refresh
