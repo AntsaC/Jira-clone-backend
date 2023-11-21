@@ -21,28 +21,15 @@ class SprintRepository extends ServiceEntityRepository
         parent::__construct($registry, Sprint::class);
     }
 
-//    /**
-//     * @return Sprint[] Returns an array of Sprint objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('s')
-//            ->andWhere('s.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('s.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
-
-//    public function findOneBySomeField($value): ?Sprint
-//    {
-//        return $this->createQueryBuilder('s')
-//            ->andWhere('s.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    public function findCurrentSprintByProject(int $projectId) {
+        return $this->createQueryBuilder('s')
+            ->select('s, cards')
+            ->leftJoin('s.cards','cards')
+            ->where('s.project = :projectId')
+            ->andWhere(':currentDate between s.startDate and s.endDate')
+            ->setParameter('projectId', $projectId)
+            ->setParameter('currentDate', new \DateTime(), 'date')
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }
