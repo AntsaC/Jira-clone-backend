@@ -16,13 +16,16 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class SprintRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(
+        ManagerRegistry $registry,
+        private readonly ProjectRepository $projectRepository
+    )
     {
         parent::__construct($registry, Sprint::class);
     }
 
     public function findCurrentSprintByProject(int $projectId) {
-        return $this->createQueryBuilder('s')
+        $currentSprint = $this->createQueryBuilder('s')
             ->select('s, cards')
             ->leftJoin('s.cards','cards')
             ->where('s.project = :projectId')
@@ -31,5 +34,22 @@ class SprintRepository extends ServiceEntityRepository
             ->setParameter('currentDate', new \DateTime(), 'date')
             ->getQuery()
             ->getOneOrNullResult();
+        if(!$currentSprint) {
+            $currentSprint = $this->createNextSprintByProject($projectId);
+        }
+        return $currentSprint;
+    }
+
+    private function createNextSprintByProject(int $projectId): Sprint
+    {
+        $project = $this->projectRepository->find($projectId);
+        $project->incrementSprintIndex();
+        $sprint = new Sprint();
+        $sprint->setProject($project);
+        $sprint->initName();
+        $this->getEntityManager()
+            ->persist($sprint);
+        $this->getEntityManager()->flush();
+        return $sprint;
     }
 }
