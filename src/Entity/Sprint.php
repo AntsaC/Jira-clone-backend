@@ -45,6 +45,10 @@ class Sprint
         $this->cards = new ArrayCollection();
     }
 
+    public function initName() {
+        $this->name = $this->project->getKey().' Sprint '.$this->project->getCurrentSprintIndex();
+    }
+
     public function getCards(): Collection
     {
         return $this->cards;
