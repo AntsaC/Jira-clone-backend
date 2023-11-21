@@ -21,11 +21,12 @@ class UserStoryRepository extends ServiceEntityRepository
         parent::__construct($registry, UserStory::class);
     }
 
-    public function findAllByProject(int $projectId)
+    public function findAllByProjectAndNotInSprint(int $projectId)
     {
         return $this->createQueryBuilder('u')
         ->select('u')
         ->where('u.project = ?1 and u.sprint is null')
+            ->orderBy('u.id')
         ->setParameter(1, $projectId)
         ->getQuery()
         ->getResult();

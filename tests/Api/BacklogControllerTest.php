@@ -10,15 +10,17 @@ class BacklogControllerTest extends ApiTestCase
     {
         $response = static::createClient()->request('GET', '/projects/1/backlog');
         $expected = [
-            [
-                'id' => 6
-            ],
-            [
-                'id' => 8
+            'cards' => [
+                [
+                    'id' => 6
+                ],
+                [
+                    'id' => 8
+                ]
             ]
         ];
         $this->assertResponseIsSuccessful();
-        self::assertCount(2, $response->toArray());
+        self::assertCount(2, $response->toArray()['cards']);
         self::assertJsonContains($expected);
     }
 
