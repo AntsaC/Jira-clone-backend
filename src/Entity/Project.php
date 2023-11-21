@@ -27,9 +27,16 @@ class Project
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private DateTimeInterface $createdAt;
 
+    #[ORM\Column]
+    private int $currentSprintIndex = 0;
+
     public function __construct()
     {
         $this->createdAt = new \DateTime();
+    }
+
+    public function incrementSprintIndex() {
+        $this->currentSprintIndex = $this->currentSprintIndex + 1;
     }
 
     public function setCreatedAt(DateTimeInterface $createdAt): void
@@ -81,6 +88,18 @@ class Project
     public function getCreatedAt(): ?\DateTimeInterface
     {
         return $this->createdAt;
+    }
+
+    public function getCurrentSprintIndex(): ?int
+    {
+        return $this->currentSprintIndex;
+    }
+
+    public function setCurrentSprintIndex(int $currentSprintIndex): static
+    {
+        $this->currentSprintIndex = $currentSprintIndex;
+
+        return $this;
     }
 
 }

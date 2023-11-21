@@ -3,8 +3,12 @@
 namespace App\Entity;
 
 use App\Repository\SprintRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Context;
+use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 
 #[ORM\Entity(repositoryClass: SprintRepository::class)]
 class Sprint
@@ -18,14 +22,40 @@ class Sprint
     private ?string $name = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+    #[Context(
+        normalizationContext: [DateTimeNormalizer::FORMAT_KEY => 'Y-m-d']
+    )]
     private ?\DateTimeInterface $startDate = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+    #[Context(
+        normalizationContext: [DateTimeNormalizer::FORMAT_KEY => 'Y-m-d']
+    )]
     private ?\DateTimeInterface $endDate = null;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
     private ?Project $project = null;
+
+    #[ORM\OneToMany(mappedBy: 'sprint', targetEntity: UserStory::class)]
+    private Collection $cards;
+
+    #[ORM\ManyToOne]
+    private ?SprintStatus $status = null;
+
+    public function __construct()
+    {
+        $this->cards = new ArrayCollection();
+    }
+
+    public function initName() {
+        $this->name = $this->project->getKey().' Sprint '.$this->project->getCurrentSprintIndex();
+    }
+
+    public function getCards(): Collection
+    {
+        return $this->cards;
+    }
 
     public function getId(): ?int
     {
@@ -76,6 +106,18 @@ class Sprint
     public function setProject(?Project $project): static
     {
         $this->project = $project;
+
+        return $this;
+    }
+
+    public function getStatus(): ?SprintStatus
+    {
+        return $this->status;
+    }
+
+    public function setStatus(?SprintStatus $status): static
+    {
+        $this->status = $status;
 
         return $this;
     }

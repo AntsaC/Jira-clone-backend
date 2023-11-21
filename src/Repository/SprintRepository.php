@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Sprint;
+use App\Entity\SprintStatus;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -16,33 +17,40 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class SprintRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(
+        ManagerRegistry $registry,
+        private readonly ProjectRepository $projectRepository,
+    )
     {
         parent::__construct($registry, Sprint::class);
     }
 
-//    /**
-//     * @return Sprint[] Returns an array of Sprint objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('s')
-//            ->andWhere('s.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('s.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    public function findCurrentSprintByProject(int $projectId) {
+        $currentSprint = $this->createQueryBuilder('s')
+            ->select('s, cards')
+            ->leftJoin('s.cards','cards')
+            ->where('s.project = :projectId')
+            ->andWhere('s.status = 2')
+            ->setParameter('projectId', $projectId)
+            ->getQuery()
+            ->getOneOrNullResult();
+        if(!$currentSprint) {
+            $currentSprint = $this->createNextSprintByProject($projectId);
+        }
+        return $currentSprint;
+    }
 
-//    public function findOneBySomeField($value): ?Sprint
-//    {
-//        return $this->createQueryBuilder('s')
-//            ->andWhere('s.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    private function createNextSprintByProject(int $projectId): Sprint
+    {
+        $project = $this->projectRepository->find($projectId);
+        $project->incrementSprintIndex();
+        $sprint = new Sprint();
+        $sprint->setProject($project);
+        $sprint->setStatus($this->getEntityManager()->getReference(SprintStatus::class, 2));
+        $sprint->initName();
+        $this->getEntityManager()
+            ->persist($sprint);
+        $this->getEntityManager()->flush();
+        return $sprint;
+    }
 }
