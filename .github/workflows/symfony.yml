@@ -36,10 +36,8 @@ jobs:
     - name: Install Dependencies
       run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
       
-    - name: Create Database
-      run: |
-        mkdir -p data
-        touch data/database.sqlite
+    - name: Start container
+      run: make up
 
     - name: Run migration
       run: php bin/console doctrine:migrations:migrate --no-interaction
