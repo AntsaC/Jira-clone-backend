@@ -40,6 +40,9 @@ class Sprint
     #[ORM\OneToMany(mappedBy: 'sprint', targetEntity: UserStory::class)]
     private Collection $cards;
 
+    #[ORM\ManyToOne]
+    private ?SprintStatus $status = null;
+
     public function __construct()
     {
         $this->cards = new ArrayCollection();
@@ -103,6 +106,18 @@ class Sprint
     public function setProject(?Project $project): static
     {
         $this->project = $project;
+
+        return $this;
+    }
+
+    public function getStatus(): ?SprintStatus
+    {
+        return $this->status;
+    }
+
+    public function setStatus(?SprintStatus $status): static
+    {
+        $this->status = $status;
 
         return $this;
     }
