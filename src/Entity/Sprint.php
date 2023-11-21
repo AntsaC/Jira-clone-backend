@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\SprintRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -26,6 +28,19 @@ class Sprint
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
     private ?Project $project = null;
+
+    #[ORM\OneToMany(mappedBy: 'sprint', targetEntity: UserStory::class)]
+    private Collection $cards;
+
+    public function __construct()
+    {
+        $this->cards = new ArrayCollection();
+    }
+
+    public function getCards(): Collection
+    {
+        return $this->cards;
+    }
 
     public function getId(): ?int
     {
