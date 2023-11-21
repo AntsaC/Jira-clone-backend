@@ -7,6 +7,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Context;
+use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 
 #[ORM\Entity(repositoryClass: SprintRepository::class)]
 class Sprint
@@ -20,9 +22,15 @@ class Sprint
     private ?string $name = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+    #[Context(
+        normalizationContext: [DateTimeNormalizer::FORMAT_KEY => 'Y-m-d']
+    )]
     private ?\DateTimeInterface $startDate = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+    #[Context(
+        normalizationContext: [DateTimeNormalizer::FORMAT_KEY => 'Y-m-d']
+    )]
     private ?\DateTimeInterface $endDate = null;
 
     #[ORM\ManyToOne]
