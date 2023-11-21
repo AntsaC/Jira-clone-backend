@@ -27,4 +27,24 @@ class SprintControllerTest extends ApiTestCase
         $this->assertResponseIsSuccessful();
         $this->assertJsonContains($expected);
     }
+
+    public function test_GivenNoCurrentSprint_WhenFindCurrentSprint() {
+        static::createClient()->request('GET', '/projects/2/current-sprint');
+        $expected = [
+            "name" => "PD2 Sprint 1"
+        ];
+        $this->assertResponseIsSuccessful();
+        $this->assertJsonContains($expected);
+    }
+
+    public function test_CurrentSprintNotStarted_WhenFindCurrentSprint() {
+        static::createClient()->request('GET', '/projects/3/current-sprint');
+        $expected = [
+            "name" => "PD2 Sprint 1"
+        ];
+        $this->assertResponseIsSuccessful();
+        $this->assertJsonContains($expected);
+    }
+
+
 }
