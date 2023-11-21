@@ -13,15 +13,16 @@ values (1, 1, 'Project 1', 'PD1', '2023-10-10'),
        (7, 2, 'Qice 2', 'PD7', '2023-11-13');
 
 insert into sprint(id, project_id, name, start_date, end_date)
-values (1, 1, 'PD1 Sprint 1', '2023-10-10', '2023-10-20'),
-       (2, 1, 'PD1 Sprint 2', null, null);
+values (1, 1, 'PD1 Sprint 1', '2023-11-10', '2023-11-20'),
+       (2, 1, 'PD1 Sprint 2', '2023-11-20', '2023-11-30'),
+       (3, 1, 'PD1 Sprint 3', null, null);
 
 insert into user_story(id, project_id, summary, sprint_id)
 values (1, 1, 'My first user story', 1),
        (2, 1, 'My second user story', 1),
-       (3, 2, 'My third user story', null),
+       (3, 2, 'My third user story', 2),
        (4, 3, 'My fourth user story', null),
-       (5, 2, 'My fifth user story', null),
+       (5, 2, 'My fifth user story', 2),
        (6, 1, 'Create new task', null),
        (8, 1, 'Add new product', null);
 
