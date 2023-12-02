@@ -32,4 +32,17 @@ class UserStoryController extends AbstractController
         );
     }
 
+    #[Route('projects/{projectId}/sprints/{sprintId}/user-stories', methods: ['POST'])]
+    public function addUserStoryBySprint(int $projectId, int $sprintId,#[MapRequestPayload] UserStory $userStory): JsonResponse
+    {
+        $this->repository->persistBySprint($projectId, $sprintId, $userStory);
+        return $this->json(
+            $userStory,
+            status: 201,
+            context: [
+                AbstractNormalizer::IGNORED_ATTRIBUTES => ['sprint']
+            ]
+        );
+    }
+
 }

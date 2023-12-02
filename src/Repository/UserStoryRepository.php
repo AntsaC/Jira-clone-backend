@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Project;
+use App\Entity\Sprint;
 use App\Entity\UserStory;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Exception\ORMException;
@@ -41,6 +42,15 @@ class UserStoryRepository extends ServiceEntityRepository
     {
         $entityManager = $this->getEntityManager();
         $userStory->setProject($entityManager->getReference(Project::class,$projectId));
+        $entityManager->persist($userStory);
+        $entityManager->flush();
+    }
+
+    public function persistBySprint(int $projectId, int $sprintId, UserStory $userStory): void
+    {
+        $entityManager = $this->getEntityManager();
+        $userStory->setProject($entityManager->getReference(Project::class, $projectId));
+        $userStory->setSprint($entityManager->getReference(Sprint::class,$sprintId));
         $entityManager->persist($userStory);
         $entityManager->flush();
     }

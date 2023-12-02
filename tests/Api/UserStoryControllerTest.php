@@ -16,4 +16,15 @@ class UserStoryControllerTest extends ApiTestCase
 
         $this->assertResponseStatusCodeSame(201);
     }
+
+    public function testGivenProjectIdIs1_WhenAddUserStoryToSprint1(): void
+    {
+        $response = static::createClient()->request('POST', '/projects/1/sprints/1/user-stories', [
+            'json' => [
+                'summary' => 'My new user story'
+            ]
+        ]);
+
+        $this->assertResponseStatusCodeSame(201);
+    }
 }
