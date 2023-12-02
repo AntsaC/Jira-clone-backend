@@ -38,20 +38,15 @@ class UserStoryRepository extends ServiceEntityRepository
     /**
      * @throws ORMException
      */
-    public function persistByBacklog(int $projectId, UserStory $userStory): void
+    public function persist(int $projectId, UserStory $userStory, ?int $sprintId = null): void
     {
         $entityManager = $this->getEntityManager();
         $userStory->setProject($entityManager->getReference(Project::class,$projectId));
+        if($sprintId) {
+            $userStory->setSprint($entityManager->getReference(Sprint::class,$sprintId));
+        }
         $entityManager->persist($userStory);
         $entityManager->flush();
     }
 
-    public function persistBySprint(int $projectId, int $sprintId, UserStory $userStory): void
-    {
-        $entityManager = $this->getEntityManager();
-        $userStory->setProject($entityManager->getReference(Project::class, $projectId));
-        $userStory->setSprint($entityManager->getReference(Sprint::class,$sprintId));
-        $entityManager->persist($userStory);
-        $entityManager->flush();
-    }
 }

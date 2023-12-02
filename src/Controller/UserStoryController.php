@@ -22,7 +22,7 @@ class UserStoryController extends AbstractController
     #[Route('projects/{projectId}/backlog/user-stories', methods: ['POST'])]
     public function addUserStoryByBacklog(int $projectId,#[MapRequestPayload] UserStory $userStory): JsonResponse
     {
-        $this->repository->persistByBacklog($projectId, $userStory);
+        $this->repository->persist($projectId, $userStory);
         return $this->json(
             $userStory,
             status: 201,
@@ -35,7 +35,7 @@ class UserStoryController extends AbstractController
     #[Route('projects/{projectId}/sprints/{sprintId}/user-stories', methods: ['POST'])]
     public function addUserStoryBySprint(int $projectId, int $sprintId,#[MapRequestPayload] UserStory $userStory): JsonResponse
     {
-        $this->repository->persistBySprint($projectId, $sprintId, $userStory);
+        $this->repository->persist($projectId, $userStory, $sprintId);
         return $this->json(
             $userStory,
             status: 201,
@@ -44,5 +44,7 @@ class UserStoryController extends AbstractController
             ]
         );
     }
+
+
 
 }
