@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\UserStory;
 use App\Repository\UserStoryRepository;
+use http\Client\Curl\User;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
@@ -32,7 +33,7 @@ class UserStoryController extends AbstractController
         );
     }
 
-    #[Route('projects/{projectId}/user-stories/{id}')]
+    #[Route('projects/{projectId}/user-stories/{id}', methods: ['GET'])]
     public function getOneById(int $id): JsonResponse
     {
         return $this->json(
@@ -43,7 +44,16 @@ class UserStoryController extends AbstractController
         );
     }
 
-
+    #[Route('projects/{projectId}/user-stories/{id}', methods: ['PUT'])]
+    public function update(int $id, #[MapRequestPayload] UserStory $userStory) {
+        $updatedUserStory = $this->repository->update($id, $userStory);
+        return $this->json(
+            $updatedUserStory,
+            context: [
+                AbstractNormalizer::IGNORED_ATTRIBUTES => ['sprint','project']
+            ]
+        );
+    }
 
 
 

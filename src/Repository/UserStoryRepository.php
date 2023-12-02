@@ -49,4 +49,13 @@ class UserStoryRepository extends ServiceEntityRepository
         $entityManager->flush();
     }
 
+    public function update(int $id, UserStory $userStory): ?UserStory
+    {
+        $userStory1 = $this->find($id);
+        $userStory1->setSummary($userStory->getSummary());
+        $userStory1->setSprint($userStory->getSprint());
+        $this->getEntityManager()->flush();
+        return $userStory1;
+    }
+
 }

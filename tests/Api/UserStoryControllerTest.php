@@ -48,4 +48,21 @@ class UserStoryControllerTest extends ApiTestCase
         $this->assertJsonContains($expected);
     }
 
+    public function testGivenProjectIdIs1_WhenUpdateUserStory(): void
+    {
+        $response = static::createClient()->request('PUT', '/projects/1/user-stories/1', [
+            'json' => [
+                'summary' => 'Updated user story'
+            ]
+        ]);
+
+        $this->assertResponseIsSuccessful();
+        $this->assertJsonContains(
+            [
+                'summary' => 'Updated user story'
+            ]
+        );
+    }
+
+
 }
