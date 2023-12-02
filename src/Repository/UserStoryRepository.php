@@ -2,8 +2,10 @@
 
 namespace App\Repository;
 
+use App\Entity\Project;
 use App\Entity\UserStory;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Exception\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -30,5 +32,16 @@ class UserStoryRepository extends ServiceEntityRepository
         ->setParameter(1, $projectId)
         ->getQuery()
         ->getResult();
+    }
+
+    /**
+     * @throws ORMException
+     */
+    public function persistByBacklog(int $projectId, UserStory $userStory): void
+    {
+        $entityManager = $this->getEntityManager();
+        $userStory->setProject($entityManager->getReference(Project::class,$projectId));
+        $entityManager->persist($userStory);
+        $entityManager->flush();
     }
 }
