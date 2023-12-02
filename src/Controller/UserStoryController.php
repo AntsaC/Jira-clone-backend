@@ -40,7 +40,7 @@ class UserStoryController extends AbstractController
             $userStory,
             status: 201,
             context: [
-                AbstractNormalizer::IGNORED_ATTRIBUTES => ['sprint']
+                AbstractNormalizer::IGNORED_ATTRIBUTES => ['sprint','project']
             ]
         );
     }
