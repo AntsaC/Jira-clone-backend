@@ -24,7 +24,6 @@ class UserStoryControllerTest extends ApiTestCase
                 'summary' => 'My new user story'
             ]
         ]);
-
         $this->assertResponseStatusCodeSame(201);
     }
 }
