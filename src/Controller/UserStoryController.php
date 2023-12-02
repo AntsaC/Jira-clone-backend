@@ -19,23 +19,10 @@ class UserStoryController extends AbstractController
     {
     }
 
-    #[Route('projects/{projectId}/backlog/user-stories', methods: ['POST'])]
-    public function addUserStoryByBacklog(int $projectId,#[MapRequestPayload] UserStory $userStory): JsonResponse
+    #[Route('projects/{projectId}/user-stories', methods: ['POST'])]
+    public function addUserStory(int $projectId, #[MapRequestPayload] UserStory $userStory): JsonResponse
     {
         $this->repository->persist($projectId, $userStory);
-        return $this->json(
-            $userStory,
-            status: 201,
-            context: [
-                AbstractNormalizer::IGNORED_ATTRIBUTES => ['project']
-            ]
-        );
-    }
-
-    #[Route('projects/{projectId}/sprints/{sprintId}/user-stories', methods: ['POST'])]
-    public function addUserStoryBySprint(int $projectId, int $sprintId,#[MapRequestPayload] UserStory $userStory): JsonResponse
-    {
-        $this->repository->persist($projectId, $userStory, $sprintId);
         return $this->json(
             $userStory,
             status: 201,
@@ -44,6 +31,19 @@ class UserStoryController extends AbstractController
             ]
         );
     }
+
+    #[Route('projects/{projectId}/user-stories/{id}')]
+    public function getOneById(int $id): JsonResponse
+    {
+        return $this->json(
+            $this->repository->find($id),
+            context: [
+                AbstractNormalizer::IGNORED_ATTRIBUTES => ['project', 'cards']
+            ]
+        );
+    }
+
+
 
 
 

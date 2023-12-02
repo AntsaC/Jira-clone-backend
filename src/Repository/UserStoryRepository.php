@@ -38,12 +38,12 @@ class UserStoryRepository extends ServiceEntityRepository
     /**
      * @throws ORMException
      */
-    public function persist(int $projectId, UserStory $userStory, ?int $sprintId = null): void
+    public function persist(int $projectId, UserStory $userStory): void
     {
         $entityManager = $this->getEntityManager();
         $userStory->setProject($entityManager->getReference(Project::class,$projectId));
-        if($sprintId) {
-            $userStory->setSprint($entityManager->getReference(Sprint::class,$sprintId));
+        if($userStory->getSprint()) {
+            $userStory->setSprint($entityManager->getReference(Sprint::class,$userStory->getSprint()->getId()));
         }
         $entityManager->persist($userStory);
         $entityManager->flush();
