@@ -59,5 +59,9 @@ class UserStoryControllerTest extends ApiTestCase
         );
     }
 
+    public function testDelete() {
+        self::createClient()->request('DELETE', '/projects/1/user-stories/3');
+        self::assertResponseStatusCodeSame(204);
+    }
 
 }

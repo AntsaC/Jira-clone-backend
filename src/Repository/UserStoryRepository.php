@@ -58,4 +58,9 @@ class UserStoryRepository extends ServiceEntityRepository
         return $userStory1;
     }
 
+    public function delete(UserStory $userStory)
+    {
+        $this->getEntityManager()->remove($userStory);
+    }
+
 }

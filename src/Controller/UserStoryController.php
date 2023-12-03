@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Entity\UserStory;
 use App\Repository\UserStoryRepository;
-use http\Client\Curl\User;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
@@ -34,10 +33,10 @@ class UserStoryController extends AbstractController
     }
 
     #[Route('projects/{projectId}/user-stories/{id}', name: 'one_user_story', methods: ['GET'])]
-    public function getOneById(int $id): JsonResponse
+    public function getOneById(UserStory $userStory): JsonResponse
     {
         return $this->json(
-            $this->repository->find($id),
+            $userStory,
             context: [
                 AbstractNormalizer::IGNORED_ATTRIBUTES => ['project', 'cards']
             ]
@@ -55,6 +54,11 @@ class UserStoryController extends AbstractController
         );
     }
 
-
+    #[Route('projects/{projectId}/user-stories/{id}', methods: ['DELETE'])]
+    public function delete(UserStory $userStory): JsonResponse
+    {
+        $this->repository->delete($userStory);
+        return $this->json(null, status: 204);
+    }
 
 }
