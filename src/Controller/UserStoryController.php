@@ -49,7 +49,7 @@ class UserStoryController extends AbstractController
         return $this->json(
             $updatedUserStory,
             context: [
-                AbstractNormalizer::IGNORED_ATTRIBUTES => ['sprint','project']
+                AbstractNormalizer::IGNORED_ATTRIBUTES => ['cards','project']
             ]
         );
     }

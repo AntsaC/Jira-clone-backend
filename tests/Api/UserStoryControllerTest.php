@@ -64,4 +64,21 @@ class UserStoryControllerTest extends ApiTestCase
         self::assertResponseStatusCodeSame(204);
     }
 
+    public function testEnterUserStoryToSprint() {
+        self::createClient()->request('PUT', 'projects/1/user-stories/4', [
+           'json' => [
+               'summary' => 'User',
+               'sprint' => [
+                   'id' => 4
+               ]
+           ]
+        ]);
+        self::assertResponseIsSuccessful();
+        self::assertJsonContains([
+            'sprint' => [
+                'id' => 4
+            ]
+        ]);
+    }
+
 }

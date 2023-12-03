@@ -53,7 +53,9 @@ class UserStoryRepository extends ServiceEntityRepository
     {
         $userStory1 = $this->find($id);
         $userStory1->setSummary($userStory->getSummary());
-        $userStory1->setSprint($userStory->getSprint());
+        if($userStory->getSprint()) {
+            $userStory1->setSprint($this->getEntityManager()->getReference(Sprint::class, $userStory->getSprint()->getId()));
+        }
         $this->getEntityManager()->flush();
         return $userStory1;
     }
