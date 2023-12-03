@@ -25,15 +25,15 @@ class UserStoryController extends AbstractController
     {
         $this->repository->persist($projectId, $userStory);
         return $this->json(
-            $userStory,
+            null,
             status: 201,
-            context: [
-                AbstractNormalizer::IGNORED_ATTRIBUTES => ['sprint','project']
+            headers: [
+                'location' => $this->generateUrl('one_user_story',['projectId' => $projectId, 'id' => $userStory->getId()])
             ]
         );
     }
 
-    #[Route('projects/{projectId}/user-stories/{id}', methods: ['GET'])]
+    #[Route('projects/{projectId}/user-stories/{id}', name: 'one_user_story', methods: ['GET'])]
     public function getOneById(int $id): JsonResponse
     {
         return $this->json(
