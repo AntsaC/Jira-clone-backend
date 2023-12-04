@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\UserStoryRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
@@ -23,6 +24,9 @@ class UserStory
 
     #[ORM\ManyToOne]
     private ?Sprint $sprint = null;
+
+    #[ORM\Column(type: Types::SMALLINT, nullable: true)]
+    private ?int $storyPoint = null;
 
     public function getId(): ?int
     {
@@ -61,6 +65,18 @@ class UserStory
     public function setSprint(?Sprint $sprint): static
     {
         $this->sprint = $sprint;
+
+        return $this;
+    }
+
+    public function getStoryPoint(): ?int
+    {
+        return $this->storyPoint;
+    }
+
+    public function setStoryPoint(?int $storyPoint): static
+    {
+        $this->storyPoint = $storyPoint;
 
         return $this;
     }

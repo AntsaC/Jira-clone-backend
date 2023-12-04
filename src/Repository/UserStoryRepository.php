@@ -2,8 +2,11 @@
 
 namespace App\Repository;
 
+use App\Entity\Project;
+use App\Entity\Sprint;
 use App\Entity\UserStory;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Exception\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -31,4 +34,35 @@ class UserStoryRepository extends ServiceEntityRepository
         ->getQuery()
         ->getResult();
     }
+
+    /**
+     * @throws ORMException
+     */
+    public function persist(int $projectId, UserStory $userStory): void
+    {
+        $entityManager = $this->getEntityManager();
+        $userStory->setProject($entityManager->getReference(Project::class,$projectId));
+        if($userStory->getSprint()) {
+            $userStory->setSprint($entityManager->getReference(Sprint::class,$userStory->getSprint()->getId()));
+        }
+        $entityManager->persist($userStory);
+        $entityManager->flush();
+    }
+
+    public function update(int $id, UserStory $userStory): ?UserStory
+    {
+        $userStory1 = $this->find($id);
+        $userStory1->setSummary($userStory->getSummary());
+        if($userStory->getSprint()) {
+            $userStory1->setSprint($this->getEntityManager()->getReference(Sprint::class, $userStory->getSprint()->getId()));
+        }
+        $this->getEntityManager()->flush();
+        return $userStory1;
+    }
+
+    public function delete(UserStory $userStory)
+    {
+        $this->getEntityManager()->remove($userStory);
+    }
+
 }

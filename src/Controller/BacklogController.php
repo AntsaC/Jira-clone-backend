@@ -17,7 +17,7 @@ class BacklogController extends AbstractController
     }
 
     #[Route('/projects/{projectId}/backlog', methods: ['GET'])]
-    public function backlogByProject(int $projectId): JsonResponse
+    public function getBacklogByProject(int $projectId): JsonResponse
     {
         return $this->json(
             [
