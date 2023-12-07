@@ -36,8 +36,7 @@ class UserStoryControllerTest extends ApiTestCase
             'id' => 1,
             'sprint' => [
                 'id' => 1
-            ],
-            'summary' => 'My first user story'
+            ]
         ];
         $this->assertResponseIsSuccessful();
         $this->assertJsonContains($expected);

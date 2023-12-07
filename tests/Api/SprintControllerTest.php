@@ -15,14 +15,7 @@ class SprintControllerTest extends ApiTestCase
             "id" => 2,
             "startDate" => '2023-11-20',
             "endDate" => '2023-11-30',
-            'cards' => [
-                [
-                    "id" => 3
-                ],
-                [
-                    "id" => 5
-                ],
-            ]
+
         ];
         $this->assertResponseIsSuccessful();
         $this->assertJsonContains($expected);

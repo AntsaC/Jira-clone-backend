@@ -24,14 +24,14 @@ values (1, 1, 'PD1 Sprint 1', '2023-11-10', '2023-11-20', 1),
        (4, 3, 'PD3 Sprint 1', '2023-10-10', '2023-10-20', 1),
        (5, 3, 'PD3 Sprint 2', null, null, 2);
 
-insert into user_story(id, project_id, summary, sprint_id, story_point)
-values (1, 1, 'My first user story', 1, 5),
-       (2, 1, 'My second user story', 1, 2),
-       (3, 2, 'My third user story', 2, 3),
-       (4, 3, 'My fourth user story', null, null),
-       (5, 2, 'My fifth user story', 2, 4),
-       (6, 1, 'Create new task', null, 3),
-       (8, 1, 'Add new product', null, 6);
+insert into user_story(id, project_id, summary, sprint_id, story_point, previous_id)
+values (1, 1, 'Project 1 first user story', 1, 5, null),
+       (5, 2, 'Project 2 first user story', 2, 4, null),
+       (3, 2, 'Project 2 user story', 2, 3, 5),
+       (2, 1, 'Project 1 third user story', 1, 2, 1),
+       (4, 3, 'Project 3 first user story', null, null, null),
+       (6, 1, 'Project 1 Create new task', null, 3, 2),
+       (8, 1, 'Project 1 Add new product', null, 6, 6);
 
 insert into criteria_acceptance(id, user_story_id, criteria, checked)
 values (1, 1, 'Simple criteria', false),
