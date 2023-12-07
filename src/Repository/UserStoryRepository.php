@@ -28,19 +28,8 @@ class UserStoryRepository extends ServiceEntityRepository
     public function findAllBySprint(int $sprintId)
     {
         return $this->getEntityManager()
-            ->createQuery(sprintf('select u from %s u where u.sprint_id = ?1', OrderedStories::class))
+            ->createQuery(sprintf('select u from %s u where %s', OrderedStories::class, $this->parentCondition(isInBacklog: false)))
             ->setParameter(1, $sprintId)
-            ->getResult();
-    }
-
-    public function findAllByProjectAndNotInSprint(int $projectId)
-    {
-        return $this->createQueryBuilder('u')
-            ->select('u')
-            ->where('u.project = ?1 and u.sprint is null')
-            ->orderBy('u.id')
-            ->setParameter(1, $projectId)
-            ->getQuery()
             ->getResult();
     }
 
@@ -77,9 +66,13 @@ class UserStoryRepository extends ServiceEntityRepository
     public function findAllByBacklog(int $projectId)
     {
         return $this->getEntityManager()
-            ->createQuery(sprintf('select u from %s u where u.project_id = ?1 and u.sprint_id is null', OrderedStories::class))
+            ->createQuery(sprintf('select u from %s u where %s', OrderedStories::class, $this->parentCondition()))
             ->setParameter(1, $projectId)
             ->getResult();
+    }
+
+    private function parentCondition($alias = 'u', $isInBacklog = true) {
+        return $isInBacklog ? "$alias.project = ?1 and $alias.sprint is null" : "$alias.sprint = ?1";
     }
 
 }

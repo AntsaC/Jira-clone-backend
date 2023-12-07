@@ -15,14 +15,14 @@ class OrderedStories
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column]
-    private ?int $project_id = null;
+    #[ORM\Column(name: 'project_id')]
+    private ?int $project = null;
 
     #[ORM\Column(length: 255)]
     private ?string $summary = null;
 
-    #[ORM\Column(nullable: true)]
-    private ?int $sprint_id = null;
+    #[ORM\Column(name: 'sprint_id', nullable: true)]
+    private ?int $sprint = null;
 
     #[ORM\Column(type: Types::SMALLINT, nullable: true)]
     private ?int $story_point = null;
@@ -32,14 +32,14 @@ class OrderedStories
         return $this->id;
     }
 
-    public function getProjectId(): ?int
+    public function getProject(): ?int
     {
-        return $this->project_id;
+        return $this->project;
     }
 
-    public function setProjectId(int $project_id): static
+    public function setProject(int $project): static
     {
-        $this->project_id = $project_id;
+        $this->project = $project;
 
         return $this;
     }
@@ -56,14 +56,14 @@ class OrderedStories
         return $this;
     }
 
-    public function getSprintId(): ?int
+    public function getSprint(): ?int
     {
-        return $this->sprint_id;
+        return $this->sprint;
     }
 
-    public function setSprintId(?int $sprint_id): static
+    public function setSprint(?int $sprint): static
     {
-        $this->sprint_id = $sprint_id;
+        $this->sprint = $sprint;
 
         return $this;
     }
