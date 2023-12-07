@@ -27,8 +27,7 @@ class SprintRepository extends ServiceEntityRepository
 
     public function findCurrentSprintByProject(int $projectId) {
         $currentSprint = $this->createQueryBuilder('s')
-            ->select('s, cards')
-            ->leftJoin('s.cards','cards')
+            ->select('s')
             ->where('s.project = :projectId')
             ->andWhere('s.status = 2')
             ->setParameter('projectId', $projectId)

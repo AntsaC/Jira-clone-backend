@@ -30,8 +30,11 @@ values (1, 1, 'Project 1 first user story', 1, 5, null),
        (3, 2, 'Project 2 user story', 2, 3, 5),
        (2, 1, 'Project 1 third user story', 1, 2, 1),
        (4, 3, 'Project 3 first user story', null, null, null),
-       (6, 1, 'Project 1 Create new task', null, 3, 2),
-       (8, 1, 'Project 1 Add new product', null, 6, 6);
+       (6, 1, 'Project 1 Create new task', 1, 3, 2),
+       (8, 1, 'Project 1 Add new product', null, 6, null);
+
+update user_story set previous_id = 1 where id = 6;
+update user_story set previous_id = 6 where id = 2;
 
 insert into criteria_acceptance(id, user_story_id, criteria, checked)
 values (1, 1, 'Simple criteria', false),

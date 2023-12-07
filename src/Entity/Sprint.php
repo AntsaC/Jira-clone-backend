@@ -37,26 +37,12 @@ class Sprint
     #[ORM\JoinColumn(nullable: false)]
     private ?Project $project = null;
 
-    #[ORM\OneToMany(mappedBy: 'sprint', targetEntity: UserStory::class)]
-    private Collection $cards;
-
     #[ORM\ManyToOne]
     private ?SprintStatus $status = null;
-
-    public function __construct()
-    {
-        $this->cards = new ArrayCollection();
-    }
 
     public function initName() {
         $this->name = $this->project->getKey().' Sprint '.$this->project->getCurrentSprintIndex();
     }
-
-    public function getCards(): Collection
-    {
-        return $this->cards;
-    }
-
     public function getId(): ?int
     {
         return $this->id;

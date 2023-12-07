@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\OrderedStories;
 use App\Entity\Project;
 use App\Entity\Sprint;
 use App\Entity\UserStory;
@@ -24,15 +25,23 @@ class UserStoryRepository extends ServiceEntityRepository
         parent::__construct($registry, UserStory::class);
     }
 
+    public function findAllBySprint(int $sprintId)
+    {
+        return $this->getEntityManager()
+            ->createQuery(sprintf('select u from %s u where u.sprint_id = ?1', OrderedStories::class))
+            ->setParameter(1, $sprintId)
+            ->getResult();
+    }
+
     public function findAllByProjectAndNotInSprint(int $projectId)
     {
         return $this->createQueryBuilder('u')
-        ->select('u')
-        ->where('u.project = ?1 and u.sprint is null')
+            ->select('u')
+            ->where('u.project = ?1 and u.sprint is null')
             ->orderBy('u.id')
-        ->setParameter(1, $projectId)
-        ->getQuery()
-        ->getResult();
+            ->setParameter(1, $projectId)
+            ->getQuery()
+            ->getResult();
     }
 
     /**
@@ -41,9 +50,9 @@ class UserStoryRepository extends ServiceEntityRepository
     public function persist(int $projectId, UserStory $userStory): void
     {
         $entityManager = $this->getEntityManager();
-        $userStory->setProject($entityManager->getReference(Project::class,$projectId));
-        if($userStory->getSprint()) {
-            $userStory->setSprint($entityManager->getReference(Sprint::class,$userStory->getSprint()->getId()));
+        $userStory->setProject($entityManager->getReference(Project::class, $projectId));
+        if ($userStory->getSprint()) {
+            $userStory->setSprint($entityManager->getReference(Sprint::class, $userStory->getSprint()->getId()));
         }
         $entityManager->persist($userStory);
         $entityManager->flush();
@@ -53,7 +62,7 @@ class UserStoryRepository extends ServiceEntityRepository
     {
         $userStory1 = $this->find($id);
         $userStory1->setSummary($userStory->getSummary());
-        if($userStory->getSprint()) {
+        if ($userStory->getSprint()) {
             $userStory1->setSprint($this->getEntityManager()->getReference(Sprint::class, $userStory->getSprint()->getId()));
         }
         $this->getEntityManager()->flush();
