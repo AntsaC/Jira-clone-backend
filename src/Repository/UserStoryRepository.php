@@ -74,4 +74,12 @@ class UserStoryRepository extends ServiceEntityRepository
         $this->getEntityManager()->remove($userStory);
     }
 
+    public function findAllByBacklog(int $projectId)
+    {
+        return $this->getEntityManager()
+            ->createQuery(sprintf('select u from %s u where u.project_id = ?1 and u.sprint_id is null', OrderedStories::class))
+            ->setParameter(1, $projectId)
+            ->getResult();
+    }
+
 }

@@ -25,13 +25,19 @@ class UserStoryRepositoryTest extends KernelTestCase
     public function testFindAllBySprint(): void
     {
         $stories = $this->repository->findAllBySprint(1);
-        $storyId = array_map(function (OrderedStories $story) {
+        $storiesId = array_map(function (OrderedStories $story) {
             return $story->getId();
         }, $stories);
-        assertSame([1,6,2], $storyId);
+        assertSame([1,6,2], $storiesId);
     }
 
-
+    public function testFindAllByBacklog(): void {
+        $stories = $this->repository->findAllByBacklog(1);
+        $storiesId = array_map(function (OrderedStories $story) {
+            return $story->getId();
+        }, $stories);
+        assertSame([8, 7], $storiesId);
+    }
 
     protected function tearDown(): void
     {

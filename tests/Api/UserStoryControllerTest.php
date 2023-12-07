@@ -6,6 +6,12 @@ use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
 
 class UserStoryControllerTest extends ApiTestCase
 {
+    public function testFindAllBySprint() {
+        $response = self::createClient()->request('GET', 'sprints/1/stories');
+        self::assertResponseIsSuccessful();
+        self::assertCount(3, $response->toArray());
+    }
+
     public function testGivenProjectIdIs1_WhenAddUserStoryToBacklog(): void
     {
         $response = static::createClient()->request('POST', '/projects/1/user-stories', [

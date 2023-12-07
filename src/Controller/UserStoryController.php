@@ -20,8 +20,9 @@ class UserStoryController extends AbstractController
     }
 
     #[Route("sprints/{sprintId}/stories", methods: ['GET'])]
-    public function findAllBySprint(int $sprintId) {
-        return $this->repository->findAllBySprint($sprintId);
+    public function findAllBySprint(int $sprintId): JsonResponse
+    {
+        return $this->json($this->repository->findAllBySprint($sprintId));
     }
 
     #[Route('projects/{projectId}/user-stories', methods: ['POST'])]

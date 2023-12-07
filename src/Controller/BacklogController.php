@@ -21,10 +21,7 @@ class BacklogController extends AbstractController
     {
         return $this->json(
             [
-                "cards" => $this->repository->findAllByProjectAndNotInSprint($projectId)
-            ],
-            context: [
-                AbstractNormalizer::IGNORED_ATTRIBUTES => ['project', 'sprint']
+                "cards" => $this->repository->findAllByBacklog($projectId)
             ]
         );
     }
