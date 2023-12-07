@@ -6,7 +6,7 @@ use App\Repository\OrderedStoriesRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Table("ordered_stories")]
+#[ORM\Table("view_ordered_stories")]
 #[ORM\Entity(repositoryClass: OrderedStoriesRepository::class, readOnly: true)]
 class OrderedStories
 {

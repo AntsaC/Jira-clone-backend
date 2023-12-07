@@ -19,7 +19,7 @@ final class Version20231207140736 extends AbstractMigration
 
     public function up(Schema $schema): void
     {
-        $this->addSql("create or replace view ordered_stories as with recursive stories as (
+        $this->addSql("create or replace view view_ordered_stories as with recursive stories as (
     select * from user_story u where u.previous_id is null
     union
     select
@@ -32,6 +32,6 @@ select * from stories");
 
     public function down(Schema $schema): void
     {
-        $this->addSql('drop view ordered°stories');
+        $this->addSql('drop view view_ordered_stories');
     }
 }
