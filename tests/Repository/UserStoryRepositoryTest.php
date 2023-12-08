@@ -21,6 +21,10 @@ class UserStoryRepositoryTest extends KernelTestCase
         $this->repository = $this->entityManager->getRepository(UserStory::class);
     }
 
+    public function testGetNextStory() {
+        $next = $this->repository->getNextStory($this->repository->find(1));
+        self::assertSame($next->getId(), 6);
+    }
 
     public function testFindAllBySprint(): void
     {

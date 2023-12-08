@@ -33,6 +33,13 @@ class UserStoryRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    public function getNextStory(UserStory $story): ?UserStory {
+        return $this->getEntityManager()
+            ->createQuery(sprintf("select u from %s u where u.previous = ?1 ", UserStory::class))
+            ->setParameter(1, $story)
+            ->getOneOrNullResult();
+    }
+
     /**
      * @throws ORMException
      */
@@ -42,6 +49,9 @@ class UserStoryRepository extends ServiceEntityRepository
         $userStory->setProject($entityManager->getReference(Project::class, $projectId));
         if ($userStory->getSprint()) {
             $userStory->setSprint($entityManager->getReference(Sprint::class, $userStory->getSprint()->getId()));
+        }
+        if($userStory->getPrevious()) {
+            $userStory->setPrevious($entityManager->getReference(UserStory::class, $userStory->getPrevious()->getId()));
         }
         $entityManager->persist($userStory);
         $entityManager->flush();
