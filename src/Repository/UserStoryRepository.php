@@ -33,6 +33,20 @@ class UserStoryRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    public function reorder(int $previousStoryId, UserStory $story, $isPushing = false): void
+    {
+        $nextStory = $this->getNextStory($story);
+        $nextStory?->setPrevious($story->getPrevious());
+        $previousStory = $this->find($previousStoryId);
+        if(!$isPushing) {
+            $story->setPrevious($previousStory->getPrevious());
+            $previousStory->setPrevious($story);
+        } else {
+            $story->setPrevious($previousStory);
+        }
+        $this->getEntityManager()->flush();
+    }
+
     public function getNextStory(UserStory $story): ?UserStory {
         return $this->getEntityManager()
             ->createQuery(sprintf("select u from %s u where u.previous = ?1 ", UserStory::class))

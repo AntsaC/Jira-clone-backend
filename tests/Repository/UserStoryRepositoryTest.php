@@ -3,6 +3,7 @@
 namespace App\Tests\Repository;
 
 use App\Entity\OrderedStories;
+use App\Entity\Sprint;
 use App\Entity\UserStory;
 use App\Repository\UserStoryRepository;
 use Doctrine\ORM\EntityManager;
@@ -24,6 +25,52 @@ class UserStoryRepositoryTest extends KernelTestCase
     public function testGetNextStory() {
         $next = $this->repository->getNextStory($this->repository->find(1));
         self::assertSame($next->getId(), 6);
+    }
+
+    public function testReorder_WhenLiftUp() {
+        $newStory = $this->nextStoryFixture(2);
+
+        $this->repository->reorder(6, $this->repository->find(2));
+
+        $stories = array_map(function ($story) {
+            return $story->getId();
+        }, $this->repository->findAllBySprint(1));
+
+        self::assertEquals([1,2,6,$newStory->getId()], $stories);
+    }
+
+    public function testReorder_WhenLiftDown() {
+        $newStory = $this->nextStoryFixture(2);
+
+        $this->repository->reorder($newStory->getId(), $this->repository->find(6));
+
+        $stories = array_map(function ($story) {
+            return $story->getId();
+        }, $this->repository->findAllBySprint(1));
+
+        self::assertEquals([1,2,6,$newStory->getId()], $stories);
+    }
+
+    public function testReorder_WhenLiftToFirstPosition() {
+
+        $this->repository->reorder(1, $this->repository->find(2));
+
+        $stories = array_map(function ($story) {
+            return $story->getId();
+        }, $this->repository->findAllBySprint(1));
+
+        self::assertEquals([2,1,6], $stories);
+    }
+
+    public function testReorder_WhenLiftToLastPosition() {
+
+        $this->repository->reorder(2, $this->repository->find(1), true);
+
+        $stories = array_map(function ($story) {
+            return $story->getId();
+        }, $this->repository->findAllBySprint(1));
+
+        self::assertEquals([6,2,1], $stories);
     }
 
     public function testFindAllBySprint(): void
@@ -48,5 +95,14 @@ class UserStoryRepositoryTest extends KernelTestCase
         parent::tearDown();
         $this->entityManager->close();
         $this->entityManager = null;
+    }
+
+    private function nextStoryFixture(int $previousStoryId): UserStory {
+        $newStory = new UserStory();
+        $newStory->setSummary("");
+        $newStory->setPrevious($this->entityManager->getReference(UserStory::class, $previousStoryId));
+        $newStory->setSprint($this->entityManager->getReference(Sprint::class, 1));
+        $this->repository->persist(1, $newStory);
+        return $newStory;
     }
 }
