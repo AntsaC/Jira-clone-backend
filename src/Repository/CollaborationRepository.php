@@ -21,28 +21,18 @@ class CollaborationRepository extends ServiceEntityRepository
         parent::__construct($registry, Collaboration::class);
     }
 
-//    /**
-//     * @return Collaboration[] Returns an array of Collaboration objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('c')
-//            ->andWhere('c.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('c.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    public function findAllCollaboratorByProject(int $projectId)
+    {
+        $collaborations = $this->getEntityManager()
+            ->createQuery(sprintf('select c, collaborator from %s c join c.collaborator collaborator where c.project = ?1', Collaboration::class))
+            ->setParameter(1, $projectId)
+            ->getResult();
+        return $this->extractCollaborator($collaborations);
+    }
 
-//    public function findOneBySomeField($value): ?Collaboration
-//    {
-//        return $this->createQueryBuilder('c')
-//            ->andWhere('c.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    private function extractCollaborator($collaborations) {
+        return array_map(function (Collaboration $collaboration) {
+            return $collaboration->getCollaborator();
+        }, $collaborations);
+    }
 }
