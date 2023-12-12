@@ -15,30 +15,45 @@ class ProjectControllerTest extends ApiTestCase
                 "name" => "Project 1",
                 "type" => [
                     "name" => "Agile project"
+                ],
+                "lead" => [
+                    "username" => "john_doe"
                 ]
             ],
             [
                 "name" => "Project 2",
                 "type" => [
                     "name" => "Agile project"
+                ],
+                "lead" => [
+                    "username" => "jane_smith"
                 ]
             ],
             [
                 "name" => "Project 3",
                 "type" => [
                     "name" => "IT project"
+                ],
+                "lead" => [
+                    "username" => "john_doe"
                 ]
             ],
             [
                 "name" => "Project 4",
                 "type" => [
                     "name" => "RH project"
+                ],
+                "lead" => [
+                    "username" => "alice_jones"
                 ]
             ],
             [
                 "name" => "Project 5",
                 "type" => [
                     "name" => "IT project"
+                ],
+                "lead" => [
+                    "username" => "bob_miller"
                 ]
             ]
         ];
