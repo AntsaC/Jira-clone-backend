@@ -1,3 +1,11 @@
+INSERT INTO "user" (id,username, email, roles, password)
+VALUES
+    (1,'john_doe', 'john.doe@example.com', '{"role": "user"}', 'securepass1'),
+    (2,'jane_smith', 'jane.smith@example.com', '{"role": "admin"}', 'strongpass2'),
+    (3,'alice_jones', 'alice.jones@example.com', '{"role": "user"}', 'password123'),
+    (4,'bob_miller', 'bob.miller@example.com', '{"role": "editor"}', 'secretword4'),
+    (5,'emma_wilson', 'emma.wilson@example.com', '{"role": "user"}', 'p@ssw0rd');
+
 insert into project_type(id, name)
 values (1, 'Agile project'),
        (2, 'IT project'),
@@ -43,8 +51,11 @@ values (1, 1, 'Simple criteria', false),
        (3, 3, 'Simple criteria 2', false),
        (4, 4, 'Simple criteria 3', true);
 
-select setval('project_id_seq' , 100);
-select setval('project_type_id_seq' , 100);
-select setval('user_story_id_seq' , 100);
-select setval('sprint_id_seq', 100);
-select setval('criteria_acceptance_id_seq', 100);
+SELECT setval('project_id_seq', COALESCE(MAX(id), 1), false) FROM project;
+SELECT setval('project_type_id_seq', COALESCE(MAX(id), 1), false) FROM project_type;
+SELECT setval('user_story_id_seq', COALESCE(MAX(id), 1), false) FROM user_story;
+SELECT setval('sprint_id_seq', COALESCE(MAX(id), 1), false) FROM sprint;
+SELECT setval('criteria_acceptance_id_seq', COALESCE(MAX(id), 1), false) FROM criteria_acceptance;
+SELECT setval('user_id_seq', COALESCE(MAX(id), 1), false) FROM "user";
+
+
