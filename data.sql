@@ -11,14 +11,14 @@ values (1, 'Agile project'),
        (2, 'IT project'),
        (3, 'RH project');
 
-insert into project(id, type_id, name, key, created_at, current_sprint_index)
-values (1, 1, 'Project 1', 'PD1', '2023-10-10', 2),
-       (2, 1, 'Project 2', 'PD2', '2023-10-15', 0),
-       (3, 2, 'Project 3', 'PD3', '2023-10-20', 0),
-       (4, 3, 'Project 4', 'PD4', '2023-11-10', 0),
-       (5, 2, 'Project 5', 'PD5', '2023-11-11', 0),
-       (6, 2, 'Qice 1', 'PD6', '2023-11-12', 0),
-       (7, 2, 'Qice 2', 'PD7', '2023-11-13', 0);
+insert into project(id, type_id, name, key, created_at, current_sprint_index, lead_id)
+values (1, 1, 'Project 1', 'PD1', '2023-10-10', 2, 1),
+       (2, 1, 'Project 2', 'PD2', '2023-10-15', 0, 2),
+       (3, 2, 'Project 3', 'PD3', '2023-10-20', 0, 1),
+       (4, 3, 'Project 4', 'PD4', '2023-11-10', 0, 3),
+       (5, 2, 'Project 5', 'PD5', '2023-11-11', 0, 4),
+       (6, 2, 'Qice 1', 'PD6', '2023-11-12', 0, null),
+       (7, 2, 'Qice 2', 'PD7', '2023-11-13', 0, null);
 
 insert into sprint_status(id, name)
 values (1,'finish'),
@@ -51,11 +51,11 @@ values (1, 1, 'Simple criteria', false),
        (3, 3, 'Simple criteria 2', false),
        (4, 4, 'Simple criteria 3', true);
 
-SELECT setval('project_id_seq', COALESCE(MAX(id), 1), false) FROM project;
-SELECT setval('project_type_id_seq', COALESCE(MAX(id), 1), false) FROM project_type;
-SELECT setval('user_story_id_seq', COALESCE(MAX(id), 1), false) FROM user_story;
-SELECT setval('sprint_id_seq', COALESCE(MAX(id), 1), false) FROM sprint;
-SELECT setval('criteria_acceptance_id_seq', COALESCE(MAX(id), 1), false) FROM criteria_acceptance;
-SELECT setval('user_id_seq', COALESCE(MAX(id), 1), false) FROM "user";
+SELECT setval('project_id_seq', COALESCE(MAX(id), 1) + 1, false) FROM project;
+SELECT setval('project_type_id_seq', COALESCE(MAX(id), 1) + 1, false) FROM project_type;
+SELECT setval('user_story_id_seq', COALESCE(MAX(id), 1) + 1, false) FROM user_story;
+SELECT setval('sprint_id_seq', COALESCE(MAX(id), 1) + 1, false) FROM sprint;
+SELECT setval('criteria_acceptance_id_seq', COALESCE(MAX(id), 1)+1, false) FROM criteria_acceptance;
+SELECT setval('user_id_seq', COALESCE(MAX(id), 1)+1, false) FROM "user";
 
 

@@ -26,8 +26,9 @@ class ProjectRepository extends ServiceEntityRepository
     {
         $maxResults = 5;
         $queryBuilder = $this->createQueryBuilder('p')
-            ->select('p, t')
-            ->join('p.type', 't');
+            ->select('p, t, lead')
+            ->join('p.type', 't')
+            ->leftjoin('p.lead', 'lead');
         if (isset($filterDto->keyword)) {
             $queryBuilder->where('p.name like :keyword');
             $queryBuilder->setParameter('keyword', '%'.$filterDto->keyword.'%');

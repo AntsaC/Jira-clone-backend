@@ -30,6 +30,9 @@ class Project
     #[ORM\Column]
     private int $currentSprintIndex = 0;
 
+    #[ORM\ManyToOne]
+    private ?User $lead = null;
+
     public function __construct()
     {
         $this->createdAt = new \DateTime();
@@ -98,6 +101,18 @@ class Project
     public function setCurrentSprintIndex(int $currentSprintIndex): static
     {
         $this->currentSprintIndex = $currentSprintIndex;
+
+        return $this;
+    }
+
+    public function getLead(): ?User
+    {
+        return $this->lead;
+    }
+
+    public function setLead(?User $lead): static
+    {
+        $this->lead = $lead;
 
         return $this;
     }
