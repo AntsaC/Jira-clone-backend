@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\OrderedStories;
 use App\Entity\Project;
 use App\Entity\Sprint;
 use App\Entity\UserStory;
@@ -24,15 +25,33 @@ class UserStoryRepository extends ServiceEntityRepository
         parent::__construct($registry, UserStory::class);
     }
 
-    public function findAllByProjectAndNotInSprint(int $projectId)
+    public function findAllBySprint(int $sprintId)
     {
-        return $this->createQueryBuilder('u')
-        ->select('u')
-        ->where('u.project = ?1 and u.sprint is null')
-            ->orderBy('u.id')
-        ->setParameter(1, $projectId)
-        ->getQuery()
-        ->getResult();
+        return $this->getEntityManager()
+            ->createQuery(sprintf('select u from %s u where %s', OrderedStories::class, $this->parentCondition(isInBacklog: false)))
+            ->setParameter(1, $sprintId)
+            ->getResult();
+    }
+
+    public function reorder(int $replacedStoryId, UserStory $story, $isPushing = false): void
+    {
+        $nextStory = $this->getNextStory($story);
+        $nextStory?->setPrevious($story->getPrevious());
+        $replacedStory = $this->find($replacedStoryId);
+        if(!$isPushing) {
+            $story->setPrevious($replacedStory->getPrevious());
+            $replacedStory->setPrevious($story);
+        } else {
+            $story->setPrevious($replacedStory);
+        }
+        $this->getEntityManager()->flush();
+    }
+
+    public function getNextStory(UserStory $story): ?UserStory {
+        return $this->getEntityManager()
+            ->createQuery(sprintf("select u from %s u where u.previous = ?1 ", UserStory::class))
+            ->setParameter(1, $story)
+            ->getOneOrNullResult();
     }
 
     /**
@@ -41,9 +60,12 @@ class UserStoryRepository extends ServiceEntityRepository
     public function persist(int $projectId, UserStory $userStory): void
     {
         $entityManager = $this->getEntityManager();
-        $userStory->setProject($entityManager->getReference(Project::class,$projectId));
-        if($userStory->getSprint()) {
-            $userStory->setSprint($entityManager->getReference(Sprint::class,$userStory->getSprint()->getId()));
+        $userStory->setProject($entityManager->getReference(Project::class, $projectId));
+        if ($userStory->getSprint()) {
+            $userStory->setSprint($entityManager->getReference(Sprint::class, $userStory->getSprint()->getId()));
+        }
+        if($userStory->getPrevious()) {
+            $userStory->setPrevious($entityManager->getReference(UserStory::class, $userStory->getPrevious()->getId()));
         }
         $entityManager->persist($userStory);
         $entityManager->flush();
@@ -53,7 +75,7 @@ class UserStoryRepository extends ServiceEntityRepository
     {
         $userStory1 = $this->find($id);
         $userStory1->setSummary($userStory->getSummary());
-        if($userStory->getSprint()) {
+        if ($userStory->getSprint()) {
             $userStory1->setSprint($this->getEntityManager()->getReference(Sprint::class, $userStory->getSprint()->getId()));
         }
         $this->getEntityManager()->flush();
@@ -63,6 +85,19 @@ class UserStoryRepository extends ServiceEntityRepository
     public function delete(UserStory $userStory)
     {
         $this->getEntityManager()->remove($userStory);
+    }
+
+    public function findAllByBacklog(int $projectId)
+    {
+        return $this->getEntityManager()
+            ->createQuery(sprintf('select u from %s u where %s', OrderedStories::class, $this->parentCondition()))
+            ->setParameter(1, $projectId)
+            ->getResult();
+    }
+
+    private function parentCondition($alias = 'u', $isInBacklog = true): string
+    {
+        return $isInBacklog ? "$alias.project = ?1 and $alias.sprint is null" : "$alias.sprint = ?1";
     }
 
 }

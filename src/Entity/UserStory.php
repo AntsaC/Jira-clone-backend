@@ -28,6 +28,9 @@ class UserStory
     #[ORM\Column(type: Types::SMALLINT, nullable: true)]
     private ?int $storyPoint = null;
 
+    #[ORM\ManyToOne(targetEntity: self::class)]
+    private ?self $previous = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -79,5 +82,25 @@ class UserStory
         $this->storyPoint = $storyPoint;
 
         return $this;
+    }
+
+    public function getPrevious(): ?self
+    {
+        return $this->previous;
+    }
+
+    public function setPrevious(?self $previous): static
+    {
+        $this->previous = $previous;
+
+        return $this;
+    }
+
+    /**
+     * @param int|null $id
+     */
+    public function setId(?int $id): void
+    {
+        $this->id = $id;
     }
 }
