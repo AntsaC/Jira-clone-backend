@@ -21,7 +21,6 @@ final class Version20231207090048 extends AbstractMigration
     {
         // this up() migration is auto-generated, please modify it to your needs
         $this->addSql('ALTER TABLE user_story ADD previous_id INT DEFAULT NULL');
-        $this->addSql('ALTER TABLE user_story DROP index');
         $this->addSql('ALTER TABLE user_story ADD CONSTRAINT FK_994FF602DE62210 FOREIGN KEY (previous_id) REFERENCES user_story (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
         $this->addSql('CREATE INDEX IDX_994FF602DE62210 ON user_story (previous_id)');
     }
