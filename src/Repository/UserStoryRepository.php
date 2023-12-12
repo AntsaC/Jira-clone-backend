@@ -33,16 +33,16 @@ class UserStoryRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function reorder(int $previousStoryId, UserStory $story, $isPushing = false): void
+    public function reorder(int $replacedStoryId, UserStory $story, $isPushing = false): void
     {
         $nextStory = $this->getNextStory($story);
         $nextStory?->setPrevious($story->getPrevious());
-        $previousStory = $this->find($previousStoryId);
+        $replacedStory = $this->find($replacedStoryId);
         if(!$isPushing) {
-            $story->setPrevious($previousStory->getPrevious());
-            $previousStory->setPrevious($story);
+            $story->setPrevious($replacedStory->getPrevious());
+            $replacedStory->setPrevious($story);
         } else {
-            $story->setPrevious($previousStory);
+            $story->setPrevious($replacedStory);
         }
         $this->getEntityManager()->flush();
     }
@@ -95,7 +95,8 @@ class UserStoryRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    private function parentCondition($alias = 'u', $isInBacklog = true) {
+    private function parentCondition($alias = 'u', $isInBacklog = true): string
+    {
         return $isInBacklog ? "$alias.project = ?1 and $alias.sprint is null" : "$alias.sprint = ?1";
     }
 
