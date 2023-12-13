@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Dto\Input\PartialStory;
 use App\Entity\UserStory;
 use App\Repository\UserStoryRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -50,12 +51,25 @@ class UserStoryController extends AbstractController
     }
 
     #[Route('projects/{projectId}/user-stories/{id}', methods: ['PUT'])]
-    public function update(int $id, #[MapRequestPayload] UserStory $userStory) {
+    public function update(int $id, #[MapRequestPayload] UserStory $userStory): JsonResponse
+    {
         $updatedUserStory = $this->repository->update($id, $userStory);
         return $this->json(
             $updatedUserStory,
             context: [
                 AbstractNormalizer::IGNORED_ATTRIBUTES => ['cards','project']
+            ]
+        );
+    }
+
+    #[Route('user-stories/{id}', methods: ['PATCH'])]
+    public function partialUpdate(int $id, #[MapRequestPayload] PartialStory $partialStory): JsonResponse
+    {
+        $story = $this->repository->partialUpdate($id, $partialStory);
+        return $this->json(
+            $story,
+            context: [
+                AbstractNormalizer::IGNORED_ATTRIBUTES => ['cards', 'project']
             ]
         );
     }

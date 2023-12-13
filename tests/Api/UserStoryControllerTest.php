@@ -86,4 +86,17 @@ class UserStoryControllerTest extends ApiTestCase
         ]);
     }
 
+    public function testPartialUpdateStory() {
+        $response = self::createClient()->request('PATCH', '/user-stories/1', [
+            'json' => [
+                'property' => 'summary',
+                'value' => 'New detail'
+            ]
+        ]);
+        self::assertResponseIsSuccessful();
+        self::assertJsonContains([
+            'summary' => 'New detail'
+        ]);
+    }
+
 }
