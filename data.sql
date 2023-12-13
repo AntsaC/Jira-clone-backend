@@ -53,15 +53,20 @@ values (1, 1, 'PD1 Sprint 1', '2023-11-10', '2023-11-20', 1),
        (4, 3, 'PD3 Sprint 1', '2023-10-10', '2023-10-20', 1),
        (5, 3, 'PD3 Sprint 2', null, null, 2);
 
-insert into user_story(id, project_id, summary, sprint_id, story_point, previous_id)
-values (1, 1, 'Project 1 first user story', 1, 5, null),
-       (5, 2, 'Project 2 first user story', 2, 4, null),
-       (3, 2, 'Project 2 user story', 2, 3, 5),
-       (2, 1, 'Project 1 third user story', 1, 2, 1),
-       (4, 3, 'Project 3 first user story', null, null, null),
-       (6, 1, 'Project 1 Create new task', 1, 3, 2),
-       (8, 1, 'Project 1 Add new product', null, 6, null),
-       (7, 1, 'Project 1 List products', null, 6, 8);
+insert into story_status(id, name)
+values (1,'TODO'),
+       (2,'IN PROGRESS'),
+       (3,'DONE');
+
+insert into user_story(id, project_id, summary, sprint_id, story_point, previous_id, status_id)
+values (1, 1, 'Project 1 first user story', 1, 5, null, 3),
+       (5, 2, 'Project 2 first user story', 2, 4, null, 2),
+       (3, 2, 'Project 2 user story', 2, 3, 5, null),
+       (2, 1, 'Project 1 third user story', 1, 2, 1, 1),
+       (4, 3, 'Project 3 first user story', null, null, null, 1),
+       (6, 1, 'Project 1 Create new task', 1, 3, 2, 3),
+       (8, 1, 'Project 1 Add new product', null, 6, null, 2),
+       (7, 1, 'Project 1 List products', null, 6, 8, 1);
 
 update user_story
 set previous_id = 1
