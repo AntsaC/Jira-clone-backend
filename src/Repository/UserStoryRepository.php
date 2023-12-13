@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Dto\output\StoryPointDetailDto;
 use App\Entity\OrderedStories;
 use App\Entity\Project;
 use App\Entity\Sprint;
@@ -93,6 +94,17 @@ class UserStoryRepository extends ServiceEntityRepository
             ->createQuery(sprintf('select us,s from %s u join %s us with us.id = u.id left join us.status s where %s', OrderedStories::class, UserStory::class, $this->parentCondition()))
             ->setParameter(1, $projectId)
             ->getResult();
+    }
+
+    public function computeStoryPointGroupByStatus(int $parent, $isInBacklog = true): StoryPointDetailDto
+    {
+        $groupByCondition = $isInBacklog ? 'project' : 'sprint';
+        $points = $this->getEntityManager()
+            ->createQuery(
+                sprintf('select s.name, sum(u.storyPoint) points from %s u left join u.status s where %s group by u.%s, s', UserStory::class, $this->parentCondition(isInBacklog: $isInBacklog), $groupByCondition)
+            )->setParameter(1, $parent)
+            ->getResult();
+        return StoryPointDetailDto::mapFromArray($points);
     }
 
     private function parentCondition($alias = 'u', $isInBacklog = true): string

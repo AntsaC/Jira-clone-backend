@@ -89,6 +89,20 @@ class UserStoryRepositoryTest extends KernelTestCase
         assertSame([8, 7], $storiesId);
     }
 
+    public function testComputeStoryPointGroupByStatus_GivenStoryIsInBacklog(): void {
+        $actual = $this->repository->computeStoryPointGroupByStatus(1);
+        self::assertEquals(0, $actual->done);
+        self::assertEquals(6, $actual->in_progress);
+        self::assertEquals(6, $actual->todo);
+    }
+
+    public function testComputeStoryPointGroupByStatus_GivenStoryIsInSprint1(): void {
+        $actual = $this->repository->computeStoryPointGroupByStatus(1, isInBacklog: false);
+        self::assertEquals(8, $actual->done);
+        self::assertEquals(0, $actual->in_progress);
+        self::assertEquals(2, $actual->todo);
+    }
+
     protected function tearDown(): void
     {
         parent::tearDown();
