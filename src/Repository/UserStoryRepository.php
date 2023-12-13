@@ -2,7 +2,9 @@
 
 namespace App\Repository;
 
+
 use App\Dto\output\StoryPointDetailDto;
+use App\Dto\Input\PartialStory;
 use App\Entity\OrderedStories;
 use App\Entity\Project;
 use App\Entity\Sprint;
@@ -81,6 +83,15 @@ class UserStoryRepository extends ServiceEntityRepository
         }
         $this->getEntityManager()->flush();
         return $userStory1;
+    }
+
+    public function partialUpdate(int $id, PartialStory $story): ?UserStory
+    {
+        $currentUserStory = $this->find($id);
+        $dynamicSetter = 'set'.$story->property;
+        $currentUserStory->$dynamicSetter($story->value);
+        $this->getEntityManager()->flush();
+        return $currentUserStory;
     }
 
     public function delete(UserStory $userStory)
