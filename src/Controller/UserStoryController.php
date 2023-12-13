@@ -26,6 +26,18 @@ class UserStoryController extends AbstractController
         return $this->json($this->repository->findAllBySprint($sprintId));
     }
 
+    #[Route('sprints/{sprintId}/point', methods: ['GET'])]
+    public function computePointsGroupByStatusAndSprint(int $sprintId): JsonResponse
+    {
+        return $this->json($this->repository->computeStoryPointGroupByStatus($sprintId, isInBacklog: false));
+    }
+
+    #[Route('projects/{id}/point', methods: ['GET'])]
+    public function computePointsGroupByStatusAndProject(int $id): JsonResponse
+    {
+        return $this->json($this->repository->computeStoryPointGroupByStatus($id));
+    }
+
     #[Route('projects/{projectId}/user-stories', methods: ['POST'])]
     public function addUserStory(int $projectId, #[MapRequestPayload] UserStory $userStory): JsonResponse
     {

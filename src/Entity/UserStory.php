@@ -31,6 +31,9 @@ class UserStory
     #[ORM\ManyToOne(targetEntity: self::class)]
     private ?self $previous = null;
 
+    #[ORM\ManyToOne]
+    private ?StoryStatus $status = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -102,5 +105,17 @@ class UserStory
     public function setId(?int $id): void
     {
         $this->id = $id;
+    }
+
+    public function getStatus(): ?StoryStatus
+    {
+        return $this->status;
+    }
+
+    public function setStatus(?StoryStatus $status): static
+    {
+        $this->status = $status;
+
+        return $this;
     }
 }
