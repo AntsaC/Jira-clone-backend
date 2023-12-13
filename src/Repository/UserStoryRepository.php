@@ -28,7 +28,7 @@ class UserStoryRepository extends ServiceEntityRepository
     public function findAllBySprint(int $sprintId)
     {
         return $this->getEntityManager()
-            ->createQuery(sprintf('select u from %s u where %s', OrderedStories::class, $this->parentCondition(isInBacklog: false)))
+            ->createQuery(sprintf('select us, s from %s u join %s us with us.id = u.id left join us.status s where %s', OrderedStories::class,UserStory::class, $this->parentCondition(isInBacklog: false)))
             ->setParameter(1, $sprintId)
             ->getResult();
     }
@@ -90,7 +90,7 @@ class UserStoryRepository extends ServiceEntityRepository
     public function findAllByBacklog(int $projectId)
     {
         return $this->getEntityManager()
-            ->createQuery(sprintf('select u from %s u where %s', OrderedStories::class, $this->parentCondition()))
+            ->createQuery(sprintf('select us,s from %s u join %s us with us.id = u.id left join us.status s where %s', OrderedStories::class, UserStory::class, $this->parentCondition()))
             ->setParameter(1, $projectId)
             ->getResult();
     }

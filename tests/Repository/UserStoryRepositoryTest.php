@@ -2,7 +2,6 @@
 
 namespace App\Tests\Repository;
 
-use App\Entity\OrderedStories;
 use App\Entity\Sprint;
 use App\Entity\UserStory;
 use App\Repository\UserStoryRepository;
@@ -76,15 +75,15 @@ class UserStoryRepositoryTest extends KernelTestCase
     public function testFindAllBySprint(): void
     {
         $stories = $this->repository->findAllBySprint(1);
-        $storiesId = array_map(function (OrderedStories $story) {
-            return $story->getId();
+        $storiesId = array_map(function (UserStory $story) {
+            return [$story->getId(), $story->getStatus()->getName()] ;
         }, $stories);
-        assertSame([1,6,2], $storiesId);
+        assertSame([[1,'DONE'],[6,'DONE'],[2,'TODO']], $storiesId);
     }
 
     public function testFindAllByBacklog(): void {
         $stories = $this->repository->findAllByBacklog(1);
-        $storiesId = array_map(function (OrderedStories $story) {
+        $storiesId = array_map(function (UserStory $story) {
             return $story->getId();
         }, $stories);
         assertSame([8, 7], $storiesId);
