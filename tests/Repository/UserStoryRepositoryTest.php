@@ -2,6 +2,7 @@
 
 namespace App\Tests\Repository;
 
+use App\Dto\Input\PartialStory;
 use App\Entity\OrderedStories;
 use App\Entity\Sprint;
 use App\Entity\UserStory;
@@ -88,6 +89,18 @@ class UserStoryRepositoryTest extends KernelTestCase
             return $story->getId();
         }, $stories);
         assertSame([8, 7], $storiesId);
+    }
+
+    public function testPartialUpdate_GivenPropertyIsSummary(): void {
+        $story = new PartialStory('summary','Updated summary value');
+        $currentStory = $this->repository->partialUpdate(1, $story);
+        self::assertEquals($story->value, $currentStory->getSummary());
+    }
+
+    public function testPartialUpdate_GivenPropertyIsPoint(): void {
+        $story = new PartialStory('storyPoint',25);
+        $currentStory = $this->repository->partialUpdate(1, $story);
+        self::assertEquals($story->value, $currentStory->getStoryPoint());
     }
 
     protected function tearDown(): void
