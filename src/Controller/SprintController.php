@@ -52,4 +52,15 @@ class SprintController extends AbstractController
         );
     }
 
+    #[Route('/projects/{projectId}/sprints/{id}', methods: ['PUT'])]
+    public function updateSprint(int $projectId, int $id, #[MapRequestPayload] Sprint $sprint): JsonResponse
+    {
+        return $this->json(
+            $this->repository->update($id, $sprint),
+            context: [
+                AbstractNormalizer::IGNORED_ATTRIBUTES => ['project']
+            ]
+        );
+    }
+
 }

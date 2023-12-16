@@ -8,6 +8,7 @@ use App\Entity\SprintStatus;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
+use function PHPUnit\Framework\returnCallback;
 
 /**
  * @extends ServiceEntityRepository<Sprint>
@@ -50,5 +51,16 @@ class SprintRepository extends ServiceEntityRepository
         $this->getEntityManager()->flush();
         return $sprint;
     }
+
+    public function update(int $id, Sprint $sprint): Sprint
+    {
+        $currentSprint = $this->find($id);
+        $currentSprint->setName($sprint->getName());
+        $currentSprint->setStartDate($sprint->getStartDate());
+        $currentSprint->setEndDate($sprint->getEndDate());
+        $this->getEntityManager()->flush();
+        return $currentSprint;
+    }
+
 
 }
