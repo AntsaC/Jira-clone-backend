@@ -70,8 +70,8 @@ class SprintControllerTest extends ApiTestCase
         self::createClient()->request('POST', 'projects/1/sprints', [
             'json' => [
                 'name' => 'New sprint',
-                'start_date' => '2023-10-10',
-                'end_date' => '2023-10-24'
+                'startDate' => '2023-10-10',
+                'endDate' => '2023-10-24'
             ]
         ]);
         self::assertResponseStatusCodeSame(201);

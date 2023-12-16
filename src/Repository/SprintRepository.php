@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Project;
 use App\Entity\Sprint;
 use App\Entity\SprintStatus;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -59,4 +60,12 @@ class SprintRepository extends ServiceEntityRepository
             ->setParameter(1, $projectId)
             ->getResult();
     }
+
+    public function create(int $projectId, Sprint $sprint): Sprint {
+        $sprint->setProject($this->getEntityManager()->getReference(Project::class, $projectId));
+        $this->getEntityManager()->persist($sprint);
+        $this->getEntityManager()->flush();
+        return $sprint;
+    }
+
 }

@@ -2,9 +2,11 @@
 
 namespace App\Controller;
 
+use App\Entity\Sprint;
 use App\Repository\SprintRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 
@@ -32,6 +34,18 @@ class SprintController extends AbstractController
     {
         return $this->json(
             $this->repository->findAllByProject($projectId),
+            context: [
+                AbstractNormalizer::IGNORED_ATTRIBUTES => ['project']
+            ]
+        );
+    }
+
+    #[Route('/projects/{projectId}/sprints', methods: ['POST'])]
+    public function createSprint(int $projectId, #[MapRequestPayload] Sprint $sprint): JsonResponse
+    {
+        return $this->json(
+            $this->repository->create($projectId, $sprint),
+            status: 201,
             context: [
                 AbstractNormalizer::IGNORED_ATTRIBUTES => ['project']
             ]
