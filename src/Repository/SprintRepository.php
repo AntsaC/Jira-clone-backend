@@ -52,4 +52,11 @@ class SprintRepository extends ServiceEntityRepository
         $this->getEntityManager()->flush();
         return $sprint;
     }
+
+    public function findAllByProject(int $projectId) {
+        return $this->getEntityManager()
+            ->createQuery(sprintf('select s, status from %s s left join s.status status where s.project = ?1', Sprint::class))
+            ->setParameter(1, $projectId)
+            ->getResult();
+    }
 }

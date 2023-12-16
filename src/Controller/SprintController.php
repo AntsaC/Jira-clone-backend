@@ -27,4 +27,15 @@ class SprintController extends AbstractController
         );
     }
 
+    #[Route('/projects/{projectId}/sprints', methods: ['GET'])]
+    public function findAllByProject(int $projectId): JsonResponse
+    {
+        return $this->json(
+            $this->repository->findAllByProject($projectId),
+            context: [
+                AbstractNormalizer::IGNORED_ATTRIBUTES => ['project']
+            ]
+        );
+    }
+
 }
