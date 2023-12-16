@@ -9,6 +9,7 @@ use App\Entity\OrderedStories;
 use App\Entity\Project;
 use App\Entity\Sprint;
 use App\Entity\UserStory;
+use App\Entity\StoryStatus;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Exception\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
@@ -89,6 +90,9 @@ class UserStoryRepository extends ServiceEntityRepository
     {
         $currentUserStory = $this->find($id);
         $dynamicSetter = 'set'.$story->property;
+        if($story->property == 'status') {
+        	$story->value = $this->getEntityManager()->getReference(StoryStatus::class, $story->value);
+        }
         $currentUserStory->$dynamicSetter($story->value);
         $this->getEntityManager()->flush();
         return $currentUserStory;
