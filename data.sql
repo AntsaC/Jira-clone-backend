@@ -41,17 +41,12 @@ VALUES (1, 1, 1),
        (14, 3, 4),
        (15, 3, 5);
 
-insert into sprint_status(id, name)
-values (1, 'complete'),
-       (2, 'current'),
-       (3, 'future');
-
-insert into sprint(id, project_id, name, start_date, end_date, status_id)
-values (1, 1, 'PD1 Sprint 1', '2023-11-10', '2023-11-20', 1),
-       (2, 1, 'PD1 Sprint 2', '2023-11-20', '2023-11-30', 2),
-       (3, 1, 'PD1 Sprint 3', null, null, 3),
-       (4, 3, 'PD3 Sprint 1', '2023-10-10', '2023-10-20', 1),
-       (5, 3, 'PD3 Sprint 2', null, null, 2);
+insert into sprint(id, project_id, name, start_date, end_date)
+values (1, 1, 'PD1 Sprint 1', '2023-11-10', '2023-11-20'),
+       (2, 1, 'PD1 Sprint 2', '2023-11-20', '2023-11-30'),
+       (3, 1, 'PD1 Sprint 3', null, null),
+       (4, 3, 'PD3 Sprint 1', '2023-10-10', '2023-10-20'),
+       (5, 3, 'PD3 Sprint 2', null, null);
 
 insert into story_status(id, name)
 values (1,'TODO'),
