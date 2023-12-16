@@ -42,7 +42,7 @@ VALUES (1, 1, 1),
        (15, 3, 5);
 
 insert into sprint_status(id, name)
-values (1, 'finish'),
+values (1, 'complete'),
        (2, 'current'),
        (3, 'future');
 
