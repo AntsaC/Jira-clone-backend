@@ -66,12 +66,16 @@ class SprintControllerTest extends ApiTestCase
         self::assertJsonContains($expected);
     }
 
-//    public function test_CreateNewSprint() {
-//        self::createClient()->request('POST', 'projects/1/sprints', [
-//            'json' => [
-//                'name' => 'New sprint',
-//                'start_date'
-//            ]
-//        ])
-//    }
+    public function test_CreateNewSprint() {
+        self::createClient()->request('POST', 'projects/1/sprints', [
+            'json' => [
+                'name' => 'New sprint',
+                'start_date' => '2023-10-10',
+                'end_date' => '2023-10-24'
+            ]
+        ]);
+        self::assertResponseStatusCodeSame(201);
+    }
+
+
 }
