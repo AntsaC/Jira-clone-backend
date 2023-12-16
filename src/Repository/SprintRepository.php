@@ -6,6 +6,7 @@ use App\Entity\Project;
 use App\Entity\Sprint;
 use App\Entity\SprintStatus;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -25,10 +26,20 @@ class SprintRepository extends ServiceEntityRepository
         parent::__construct($registry, Sprint::class);
     }
 
+    private function createFindAllSprintByProjectQuery(int $projectId): QueryBuilder
+    {
+        return $this->createQueryBuilder('s')
+            ->select(
+                's',
+                'case when s.endDate < current_date() then \'complete\' when current_date() < s.startDate then \'future\' else \'current\' end status'
+            )
+            ->where('s.project = ?1')
+            ->setParameter(1, $projectId);
+    }
+
     public function findAllByProject(int $projectId) {
-        return $this->getEntityManager()
-            ->createQuery(sprintf('select s, status from %s s left join s.status status where s.project = ?1', Sprint::class))
-            ->setParameter(1, $projectId)
+        return $this->createFindAllSprintByProjectQuery($projectId)
+            ->getQuery()
             ->getResult();
     }
 

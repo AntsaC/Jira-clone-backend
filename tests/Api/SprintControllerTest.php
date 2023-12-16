@@ -8,32 +8,33 @@ class SprintControllerTest extends ApiTestCase
 {
     const URL_CURRENT_SPRINT = '/projects/1/current-sprint';
 
-//    public function test_FindAllSprintByProject() {
-//        $response = self::createClient()->request('GET','projects/1/sprints');
-//        $expected = [
-//            [
-//                'id' => 1,
-//                'status' => [
-//                    'name' => 'complete'
-//                ]
-//            ],
-//            [
-//                'id' => 2,
-//                'status' => [
-//                    'name' => 'current'
-//                ]
-//            ],
-//            [
-//                'id' => 3,
-//                'status' => [
-//                    'name' => 'future'
-//                ]
-//            ]
-//        ];
-//        self::assertResponseIsSuccessful();
-//        self::assertCount(3, $response->toArray());
-//        self::assertJsonContains($expected);
-//    }
+    public function test_FindAllSprintByProject() {
+        $response = self::createClient()->request('GET','projects/1/sprints');
+        $expected = [
+            [
+                'id' => 1,
+                'status' => [
+                    'name' => 'complete'
+                ]
+            ],
+            [
+                'id' => 2,
+                'status' => [
+                    'name' => 'current'
+                ]
+            ],
+            [
+                'id' => 3,
+                'status' => [
+                    'name' => 'future'
+                ]
+            ]
+        ];
+        dd($response->toArray());
+        self::assertResponseIsSuccessful();
+        self::assertCount(3, $response->toArray());
+        self::assertJsonContains($expected);
+    }
 
     public function test_CreateNewSprint() {
         self::createClient()->request('POST', 'projects/1/sprints', [
