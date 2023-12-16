@@ -30,6 +30,12 @@ class SprintControllerTest extends ApiTestCase
         self::assertJsonContains($expected);
     }
 
+    public function test_FindAllSprintByStatus_GivenStatusIsOnGoing() {
+        $response = self::createClient()->request('GET','projects/1/sprints?status=ongoing');
+        $expected = [2, 3, 6];
+        self::assertSame($expected, $this->exctractPropertyFromResponse($response->toArray(),'id'));
+    }
+
     public function test_CreateNewSprint() {
         self::createClient()->request('POST', 'projects/1/sprints', [
             'json' => [
@@ -53,6 +59,12 @@ class SprintControllerTest extends ApiTestCase
         ]);
         self::assertResponseIsSuccessful();
         self::assertJsonContains($updatedSprint);
+    }
+
+    private function exctractPropertyFromResponse($response, $property) {
+        return array_map(function ($sprint) use ($property) {
+            return $sprint['sprint'][$property];
+        }, $response);
     }
 
 }
