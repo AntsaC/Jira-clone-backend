@@ -43,8 +43,9 @@ VALUES (1, 1, 1),
 
 insert into sprint(id, project_id, name, start_date, end_date)
 values (1, 1, 'PD1 Sprint 1', '2023-11-10', '2023-11-20'),
-       (2, 1, 'PD1 Sprint 2', '2023-11-20', '2023-11-30'),
-       (3, 1, 'PD1 Sprint 3', null, null),
+       (2, 1, 'PD1 Sprint 2', '2023-12-10', '2023-12-20'),
+       (3, 1, 'PD1 Sprint 3', '2024-01-01', '2024-01-10'),
+       (6, 1, 'PD1 Sprint 3', null, null),
        (4, 3, 'PD3 Sprint 1', '2023-10-10', '2023-10-20'),
        (5, 3, 'PD3 Sprint 2', null, null);
 

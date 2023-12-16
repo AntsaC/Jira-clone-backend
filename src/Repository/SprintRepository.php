@@ -30,11 +30,12 @@ class SprintRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('s')
             ->select(
-                's',
-                'case when s.endDate < current_date() then \'complete\' when current_date() < s.startDate then \'future\' else \'current\' end status'
+                's sprint',
+                'case when s.endDate < :date then \'complete\' when :date < s.startDate then \'future\' when :date between s.startDate and s.endDate then \'current\' else \'unknown\' end status'
             )
             ->where('s.project = ?1')
-            ->setParameter(1, $projectId);
+            ->setParameter(1, $projectId)
+            ->setParameter('date', date('Y-m-d'));
     }
 
     public function findAllByProject(int $projectId) {

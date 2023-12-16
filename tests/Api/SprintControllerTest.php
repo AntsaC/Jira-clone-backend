@@ -12,27 +12,20 @@ class SprintControllerTest extends ApiTestCase
         $response = self::createClient()->request('GET','projects/1/sprints');
         $expected = [
             [
-                'id' => 1,
-                'status' => [
-                    'name' => 'complete'
-                ]
+                'sprint' => ['id' => 1],
             ],
             [
-                'id' => 2,
-                'status' => [
-                    'name' => 'current'
-                ]
+                'sprint' => ['id' => 2],
             ],
             [
-                'id' => 3,
-                'status' => [
-                    'name' => 'future'
-                ]
-            ]
+                'sprint' => ['id' => 3],
+            ],
+            [
+                'sprint' => ['id' => 6],
+            ],
         ];
-        dd($response->toArray());
         self::assertResponseIsSuccessful();
-        self::assertCount(3, $response->toArray());
+        self::assertCount(4, $response->toArray());
         self::assertJsonContains($expected);
     }
 
