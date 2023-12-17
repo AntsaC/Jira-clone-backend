@@ -46,6 +46,13 @@ class SprintRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
     }
 
+    public function findCurrentSprintByProject(int $projectId) {
+        return $this->getEntityManager()
+            ->createQuery(sprintf('select s from %s where current_date() between s.startDate and s.endDate and s.project = ?1', Sprint::class))
+            ->setParameter(1, $projectId)
+            ->getOneOrNullResult();
+    }
+
     private function buildDynamicPredicate(QueryBuilder $qb, SprintFilter $filter): void
     {
         if($filter->status == 'ongoing') {

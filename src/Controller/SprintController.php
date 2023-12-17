@@ -27,7 +27,7 @@ class SprintController extends AbstractController
         return $this->json(
             $this->repository->findCurrentSprintByProject($projectId),
             context: [
-                AbstractNormalizer::IGNORED_ATTRIBUTES => ['project','sprint']
+                AbstractNormalizer::IGNORED_ATTRIBUTES => ['project']
             ]
         );
     }
