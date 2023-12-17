@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Dto\Input\SprintFilter;
 use App\Entity\Project;
 use App\Entity\Sprint;
 use App\Entity\SprintStatus;
@@ -32,17 +33,33 @@ class SprintRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('s')
             ->select(
                 's sprint',
-                'case when s.endDate < :date then \'complete\' when :date < s.startDate then \'future\' when :date between s.startDate and s.endDate then \'current\' else \'unknown\' end status'
+                'case when s.endDate < :date then \'complete\' when :date < s.startDate then \'future\' when :date between s.startDate and s.endDate then \'current\' else \'unknown\' end as status'
             )
             ->where('s.project = ?1')
             ->setParameter(1, $projectId)
             ->setParameter('date', date('Y-m-d'));
     }
 
-    public function findAllByProject(int $projectId) {
-        return $this->createFindAllSprintByProjectQuery($projectId)
-            ->getQuery()
-            ->getResult();
+    public function findAllByProject(int $projectId, SprintFilter $filter) {
+        $qb = $this->createFindAllSprintByProjectQuery($projectId);
+        $this->buildDynamicPredicate($qb, $filter);
+        return $qb->getQuery()->getResult();
+    }
+
+    private function buildDynamicPredicate(QueryBuilder $qb, SprintFilter $filter): void
+    {
+        if($filter->status == 'ongoing') {
+            $qb->andWhere('s.endDate >= :date or s.endDate is null');
+        }
+        if($filter->status == 'complete') {
+            $qb->andWhere('s.endDate < :date');
+        }
+        if($filter->status == 'current') {
+            $qb->andWhere(':date between s.startDate and s.endDate');
+        }
+        if($filter->status == 'future') {
+            $qb->andWhere(':date < s.startDate');
+        }
     }
 
     public function create(int $projectId, Sprint $sprint): Sprint {

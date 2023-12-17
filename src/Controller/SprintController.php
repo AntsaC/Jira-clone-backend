@@ -2,10 +2,13 @@
 
 namespace App\Controller;
 
+use App\Dto\Input\SprintFilter;
 use App\Entity\Sprint;
 use App\Repository\SprintRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
+use Symfony\Component\HttpKernel\Attribute\MapQueryString;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
@@ -30,10 +33,10 @@ class SprintController extends AbstractController
     }
 
     #[Route('/projects/{projectId}/sprints', methods: ['GET'])]
-    public function findAllByProject(int $projectId): JsonResponse
+    public function findAllByProject(int $projectId, #[MapQueryString] ?SprintFilter $filter): JsonResponse
     {
         return $this->json(
-            $this->repository->findAllByProject($projectId),
+            $this->repository->findAllByProject($projectId, $filter ?? new SprintFilter()),
             context: [
                 AbstractNormalizer::IGNORED_ATTRIBUTES => ['project']
             ]

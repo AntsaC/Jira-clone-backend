@@ -36,6 +36,8 @@ class SprintControllerTest extends ApiTestCase
         self::assertSame($expected, $this->exctractPropertyFromResponse($response->toArray(),'id'));
     }
 
+
+
     public function test_CreateNewSprint() {
         self::createClient()->request('POST', 'projects/1/sprints', [
             'json' => [
