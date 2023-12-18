@@ -43,10 +43,13 @@ class UserStoryController extends AbstractController
     {
         $this->repository->persist($projectId, $userStory);
         return $this->json(
-            null,
+            $userStory,
             status: 201,
             headers: [
                 'location' => $this->generateUrl('one_user_story',['projectId' => $projectId, 'id' => $userStory->getId()])
+            ],
+            context: [
+                AbstractNormalizer::IGNORED_ATTRIBUTES => ['project', 'cards']
             ]
         );
     }

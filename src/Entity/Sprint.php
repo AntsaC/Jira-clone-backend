@@ -37,9 +37,6 @@ class Sprint
     #[ORM\JoinColumn(nullable: false)]
     private ?Project $project = null;
 
-    #[ORM\ManyToOne]
-    private ?SprintStatus $status = null;
-
     public function initName() {
         $this->name = $this->project->getKey().' Sprint '.$this->project->getCurrentSprintIndex();
     }
@@ -92,18 +89,6 @@ class Sprint
     public function setProject(?Project $project): static
     {
         $this->project = $project;
-
-        return $this;
-    }
-
-    public function getStatus(): ?SprintStatus
-    {
-        return $this->status;
-    }
-
-    public function setStatus(?SprintStatus $status): static
-    {
-        $this->status = $status;
 
         return $this;
     }

@@ -2,10 +2,14 @@
 
 namespace App\Repository;
 
+use App\Dto\Input\SprintFilter;
+use App\Entity\Project;
 use App\Entity\Sprint;
 use App\Entity\SprintStatus;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
+use function PHPUnit\Framework\returnCallback;
 
 /**
  * @extends ServiceEntityRepository<Sprint>
@@ -19,37 +23,68 @@ class SprintRepository extends ServiceEntityRepository
 {
     public function __construct(
         ManagerRegistry $registry,
-        private readonly ProjectRepository $projectRepository,
     )
     {
         parent::__construct($registry, Sprint::class);
     }
 
-    public function findCurrentSprintByProject(int $projectId) {
-        $currentSprint = $this->createQueryBuilder('s')
-            ->select('s')
-            ->where('s.project = :projectId')
-            ->andWhere('s.status = 2')
-            ->setParameter('projectId', $projectId)
-            ->getQuery()
-            ->getOneOrNullResult();
-        if(!$currentSprint) {
-            $currentSprint = $this->createNextSprintByProject($projectId);
-        }
-        return $currentSprint;
+    private function createFindAllSprintByProjectQuery(int $projectId): QueryBuilder
+    {
+        return $this->createQueryBuilder('s')
+            ->select(
+                's sprint',
+                'case when s.endDate < :date then \'complete\' when :date < s.startDate then \'future\' when :date between s.startDate and s.endDate then \'current\' else \'unknown\' end as status'
+            )
+            ->where('s.project = ?1')
+            ->setParameter(1, $projectId)
+            ->setParameter('date', date('Y-m-d'));
     }
 
-    private function createNextSprintByProject(int $projectId): Sprint
+    public function findAllByProject(int $projectId, SprintFilter $filter) {
+        $qb = $this->createFindAllSprintByProjectQuery($projectId);
+        $this->buildDynamicPredicate($qb, $filter);
+        return $qb->getQuery()->getResult();
+    }
+
+    public function findCurrentSprintByProject(int $projectId) {
+        return $this->getEntityManager()
+            ->createQuery(sprintf('select s from %s where current_date() between s.startDate and s.endDate and s.project = ?1', Sprint::class))
+            ->setParameter(1, $projectId)
+            ->getOneOrNullResult();
+    }
+
+    private function buildDynamicPredicate(QueryBuilder $qb, SprintFilter $filter): void
     {
-        $project = $this->projectRepository->find($projectId);
-        $project->incrementSprintIndex();
-        $sprint = new Sprint();
-        $sprint->setProject($project);
-        $sprint->setStatus($this->getEntityManager()->getReference(SprintStatus::class, 2));
-        $sprint->initName();
-        $this->getEntityManager()
-            ->persist($sprint);
+        if($filter->status == 'ongoing') {
+            $qb->andWhere('s.endDate >= :date or s.endDate is null');
+        }
+        if($filter->status == 'complete') {
+            $qb->andWhere('s.endDate < :date');
+        }
+        if($filter->status == 'current') {
+            $qb->andWhere(':date between s.startDate and s.endDate');
+        }
+        if($filter->status == 'future') {
+            $qb->andWhere(':date < s.startDate');
+        }
+    }
+
+    public function create(int $projectId, Sprint $sprint): Sprint {
+        $sprint->setProject($this->getEntityManager()->getReference(Project::class, $projectId));
+        $this->getEntityManager()->persist($sprint);
         $this->getEntityManager()->flush();
         return $sprint;
     }
+
+    public function update(int $id, Sprint $sprint): Sprint
+    {
+        $currentSprint = $this->find($id);
+        $currentSprint->setName($sprint->getName());
+        $currentSprint->setStartDate($sprint->getStartDate());
+        $currentSprint->setEndDate($sprint->getEndDate());
+        $this->getEntityManager()->flush();
+        return $currentSprint;
+    }
+
+
 }
