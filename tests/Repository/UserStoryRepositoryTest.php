@@ -2,6 +2,7 @@
 
 namespace App\Tests\Repository;
 
+use App\Dto\Input\MoveActionInput;
 use App\Dto\Input\PartialStory;
 use App\Entity\OrderedStories;
 use App\Entity\Sprint;
@@ -119,7 +120,7 @@ class UserStoryRepositoryTest extends KernelTestCase
 
     public function testMoveStoryOnSprint()
     {
-        $moveAction = new MoveActionInput(3, [7,8]);
+        $moveAction = new MoveActionInput([7,8],3);
         $this->repository->moveStory($moveAction);
 
         $stories = $this->repository->findAllBySprint(3);
