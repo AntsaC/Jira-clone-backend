@@ -99,4 +99,15 @@ class UserStoryControllerTest extends ApiTestCase
         ]);
     }
 
+    public function testMoveStory()
+    {
+        self::createClient()->request('PUT', 'user-stories/move', [
+            'json' => [
+                'sprint' => 3,
+                'stories' => [7,8]
+            ]
+        ]);
+        self::assertResponseStatusCodeSame(204);
+    }
+
 }
