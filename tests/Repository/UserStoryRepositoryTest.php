@@ -117,6 +117,17 @@ class UserStoryRepositoryTest extends KernelTestCase
         self::assertEquals($story->value, $currentStory->getStoryPoint());
     }
 
+    public function testMoveStoryOnSprint()
+    {
+        $moveAction = new MoveActionInput(3, [7,8]);
+        $this->repository->moveStory($moveAction);
+
+        $stories = $this->repository->findAllBySprint(3);
+        $storiesId = $this->extractStoryId($stories);
+        self::assertContains(7, $storiesId);
+        self::assertContains(8, $storiesId);
+    }
+
     protected function tearDown(): void
     {
         parent::tearDown();
@@ -131,5 +142,12 @@ class UserStoryRepositoryTest extends KernelTestCase
         $newStory->setSprint($this->entityManager->getReference(Sprint::class, 1));
         $this->repository->persist(1, $newStory);
         return $newStory;
+    }
+
+    private function extractStoryId($stories)
+    {
+        return array_map(function ($story){
+            return $story->getId();
+        }, $stories);
     }
 }
