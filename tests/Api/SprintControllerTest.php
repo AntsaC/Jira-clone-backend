@@ -63,6 +63,17 @@ class SprintControllerTest extends ApiTestCase
         self::assertJsonContains($updatedSprint);
     }
 
+    public function testOne()
+    {
+        self::createClient()->request('GET', 'projects/1/sprints/1');
+        self::assertResponseIsSuccessful();
+        self::assertJsonContains([
+            'sprint' => [
+                'id' => 1
+            ]
+        ]);
+    }
+
     private function exctractPropertyFromResponse($response, $property) {
         return array_map(function ($sprint) use ($property) {
             return $sprint['sprint'][$property];

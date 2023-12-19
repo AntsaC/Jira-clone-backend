@@ -7,6 +7,7 @@ use App\Entity\Project;
 use App\Entity\Sprint;
 use App\Entity\SprintStatus;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 use function PHPUnit\Framework\returnCallback;
@@ -84,6 +85,18 @@ class SprintRepository extends ServiceEntityRepository
         $currentSprint->setEndDate($sprint->getEndDate());
         $this->getEntityManager()->flush();
         return $currentSprint;
+    }
+
+    /**
+     * @throws NonUniqueResultException
+     */
+    public function findById(int $id, int $project)
+    {
+        $qb = $this->createFindAllSprintByProjectQuery($project);
+        return $qb->andWhere('s.id = :id ')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 
 
