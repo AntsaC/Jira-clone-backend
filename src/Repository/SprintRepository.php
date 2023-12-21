@@ -83,6 +83,7 @@ class SprintRepository extends ServiceEntityRepository
         $currentSprint->setName($sprint->getName());
         $currentSprint->setStartDate($sprint->getStartDate());
         $currentSprint->setEndDate($sprint->getEndDate());
+        $currentSprint->setGoal($sprint->getGoal());
         $this->getEntityManager()->flush();
         return $currentSprint;
     }
