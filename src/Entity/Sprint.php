@@ -37,6 +37,9 @@ class Sprint
     #[ORM\JoinColumn(nullable: false)]
     private ?Project $project = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $goal = null;
+
     public function initName() {
         $this->name = $this->project->getKey().' Sprint '.$this->project->getCurrentSprintIndex();
     }
@@ -96,5 +99,17 @@ class Sprint
     public function setId(?int $id): void
     {
         $this->id = $id;
+    }
+
+    public function getGoal(): ?string
+    {
+        return $this->goal;
+    }
+
+    public function setGoal(string $goal): static
+    {
+        $this->goal = $goal;
+
+        return $this;
     }
 }
