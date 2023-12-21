@@ -106,7 +106,7 @@ class Sprint
         return $this->goal;
     }
 
-    public function setGoal(string $goal): static
+    public function setGoal(?string $goal): static
     {
         $this->goal = $goal;
 
