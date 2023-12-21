@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Dto\Input\MoveActionInput;
 use App\Dto\Input\PartialStory;
 use App\Entity\UserStory;
 use App\Repository\UserStoryRepository;
@@ -86,6 +87,16 @@ class UserStoryController extends AbstractController
             context: [
                 AbstractNormalizer::IGNORED_ATTRIBUTES => ['cards', 'project']
             ]
+        );
+    }
+
+    #[Route('user-stories/move', methods: ['PUT'])]
+    public function moveStory(#[MapRequestPayload] MoveActionInput $moveActionInput): JsonResponse
+    {
+        $this->repository->moveStory($moveActionInput);
+        return $this->json(
+            null,
+            status: 204
         );
     }
 

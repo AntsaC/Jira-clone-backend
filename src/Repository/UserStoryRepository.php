@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 
+use App\Dto\Input\MoveActionInput;
 use App\Dto\output\StoryPointDetailDto;
 use App\Dto\Input\PartialStory;
 use App\Entity\OrderedStories;
@@ -126,5 +127,16 @@ class UserStoryRepository extends ServiceEntityRepository
     {
         return $isInBacklog ? "$alias.project = ?1 and $alias.sprint is null" : "$alias.sprint = ?1";
     }
+
+    public function moveStory(MoveActionInput $moveAction): void
+    {
+        $this->getEntityManager()
+        ->createQuery(sprintf('update %s u set u.sprint = ?1 where u.id in (?2)', UserStory::class))
+        ->setParameter(1, $moveAction->sprint)
+        ->setParameter(2, $moveAction->stories)
+        ->execute();
+    }
+
+
 
 }

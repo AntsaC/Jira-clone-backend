@@ -66,4 +66,15 @@ class SprintController extends AbstractController
         );
     }
 
+    #[Route('/projects/{project}/sprints/{id}', methods: ['GET'])]
+    public function one(int $project, int $id): JsonResponse
+    {
+        return $this->json(
+            $this->repository->findById($id, $project),
+            context: [
+                AbstractNormalizer::IGNORED_ATTRIBUTES => ['project']
+            ]
+        );
+    }
+
 }
