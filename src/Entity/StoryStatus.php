@@ -19,13 +19,8 @@ class StoryStatus
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    private ArrayCollection $cards ;
-
-    public function __construct()
-    {
-        $this->cards = new ArrayCollection();
-    }
-
+    private array $cards = [] ;
+    
     public static function createById($id): StoryStatus
     {
         $status = new StoryStatus();
@@ -42,9 +37,9 @@ class StoryStatus
     }
 
     /**
-     * @return ArrayCollection
+     * @return array
      */
-    public function getCards(): ArrayCollection
+    public function &getCards(): array
     {
         return $this->cards;
     }

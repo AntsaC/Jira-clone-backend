@@ -2,19 +2,16 @@
 
 namespace App\Dto\output;
 
-use App\Entity\StoryStatus;
-use Doctrine\Common\Collections\ArrayCollection;
-
 class Board
 {
-    private ArrayCollection $columns;
+    private array $columns;
 
-    public function getColumns(): ArrayCollection
+    public function getColumns(): array
     {
         return $this->columns;
     }
 
-    public function setColumns(ArrayCollection $columns): void
+    public function setColumns(array $columns): void
     {
         $this->columns = $columns;
     }

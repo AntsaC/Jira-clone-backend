@@ -7,7 +7,6 @@ use App\Entity\UserStory;
 use App\Repository\StoryStatusRepository;
 use App\Repository\UserStoryRepository;
 use App\Service\BoardService;
-use Doctrine\Common\Collections\ArrayCollection;
 use PHPUnit\Framework\TestCase;
 
 class BoardServiceTest extends TestCase
@@ -24,18 +23,18 @@ class BoardServiceTest extends TestCase
         $statusRepository = $this->createMock(StoryStatusRepository::class);
         $statusRepository->expects(self::any())
             ->method('findAll')
-            ->willReturn(new ArrayCollection([
+            ->willReturn([
                 StoryStatus::createById(1),
                 StoryStatus::createById(2),
                 StoryStatus::createById(3)
-            ]));
+            ]);
 
         $this->service = new BoardService($userStoryRepository, $statusRepository);
     }
 
-    private function loadStories(): ArrayCollection
+    private function loadStories(): array
     {
-        $stories = new ArrayCollection();
+        $stories = [];
 
         $createStory = function ($id, $status) {
             $story = new UserStory();
@@ -44,11 +43,11 @@ class BoardServiceTest extends TestCase
             return $story;
         };
 
-        $stories->add($createStory(1, 1));
-        $stories->add($createStory(2, 2));
-        $stories->add($createStory(3, 1));
-        $stories->add($createStory(4, 3));
-        $stories->add($createStory(5, 2));
+        $stories[] = $createStory(1, 1);
+        $stories[] = $createStory(2, 2);
+        $stories[] = $createStory(3, 1);
+        $stories[] = $createStory(4, 3);
+        $stories[] = $createStory(5, 2);
 
         return $stories;
     }
@@ -58,16 +57,16 @@ class BoardServiceTest extends TestCase
         $board = $this->service->createBoardBySprint(1);
         self::assertCount(3, $board->getColumns());
 
-        $this->assertStatusCard([1,3], $board->getColumns()->get(0));
-        $this->assertStatusCard([2,5], $board->getColumns()->get(1));
-        $this->assertStatusCard([4], $board->getColumns()->get(2));
+        $this->assertStatusCard([1,3], $board->getColumns()[0]);
+        $this->assertStatusCard([2,5], $board->getColumns()[1]);
+        $this->assertStatusCard([4], $board->getColumns()[2]);
     }
 
     private function assertStatusCard($expectedCard, StoryStatus $status): void
     {
         $cards = array_map(function (UserStory $story) {
             return $story->getId();
-        }, $status->getCards()->toArray());
+        }, $status->getCards());
 
         self::assertEquals($expectedCard, $cards);
     }

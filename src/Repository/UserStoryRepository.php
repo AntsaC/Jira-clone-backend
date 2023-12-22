@@ -30,7 +30,7 @@ class UserStoryRepository extends ServiceEntityRepository
         parent::__construct($registry, UserStory::class);
     }
 
-    public function findAllBySprint(int $sprintId)
+    public function findAllBySprint(int $sprintId): array
     {
         return $this->getEntityManager()
             ->createQuery(sprintf('select us, s from %s u join %s us with us.id = u.id left join us.status s where %s', OrderedStories::class,UserStory::class, $this->parentCondition(isInBacklog: false)))
