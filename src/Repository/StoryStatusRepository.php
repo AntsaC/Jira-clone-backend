@@ -11,7 +11,6 @@ use Doctrine\Persistence\ManagerRegistry;
  *
  * @method StoryStatus|null find($id, $lockMode = null, $lockVersion = null)
  * @method StoryStatus|null findOneBy(array $criteria, array $orderBy = null)
- * @method StoryStatus[]    findAll()
  * @method StoryStatus[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
 class StoryStatusRepository extends ServiceEntityRepository
