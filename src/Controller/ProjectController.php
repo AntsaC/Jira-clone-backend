@@ -43,6 +43,7 @@ class ProjectController extends AbstractController
     {
         $currentProject = $this->repository->find($id);
         $currentProject->setName($project->getName());
+        $currentProject->setType($this->entityManager->getReference(ProjectType::class, $project->getType()->getId()));
         $this->entityManager->flush();
         return $this->json($currentProject);
     }
