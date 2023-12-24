@@ -151,6 +151,9 @@ class ProjectControllerTest extends ApiTestCase
         self::createClient()->request('PUT', 'projects/1', [
             'json' => [
                 'name' => 'My project',
+                'type' => [
+                    'id' => 1
+                ]
             ]
         ]);
         self::assertResponseIsSuccessful();
