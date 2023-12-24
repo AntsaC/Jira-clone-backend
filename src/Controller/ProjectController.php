@@ -48,4 +48,20 @@ class ProjectController extends AbstractController
         return $this->json($currentProject);
     }
 
+    #[Route('/{id}', requirements: ['id' => '\d+'], methods: ['GET'])]
+    public function oneById(int $id): JsonResponse
+    {
+        return $this->json(
+            $this->repository->find($id)
+        );
+    }
+
+    #[Route('/{key}', methods: ['GET'])]
+    public function oneByKey(string $key): JsonResponse
+    {
+        return $this->json(
+            $this->repository->findOneBy(['key' => $key])
+        );
+    }
+
 }
