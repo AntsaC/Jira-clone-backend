@@ -132,7 +132,9 @@ class UserStoryRepository extends ServiceEntityRepository
                                 sum(u.storyPoint) as point
                             from App\Entity\StoryStatus s 
                             left join App\Entity\UserStory u with s = u.status and %s 
-                            group by s.name"
+                            group by s.name, s.id
+                            order by s.id
+                            "
                     , $this->parentCondition(isInBacklog: $InBacklog)
                 )
             )->setParameter(1, $parent)
