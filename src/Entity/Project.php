@@ -38,10 +38,6 @@ class Project
         $this->createdAt = new \DateTime();
     }
 
-    public function incrementSprintIndex() {
-        $this->currentSprintIndex = $this->currentSprintIndex + 1;
-    }
-
     public function setCreatedAt(DateTimeInterface $createdAt): void
     {
         $this->createdAt = $createdAt;

@@ -30,7 +30,7 @@ class UserStoryRepository extends ServiceEntityRepository
         parent::__construct($registry, UserStory::class);
     }
 
-    public function findAllBySprint(int $sprintId)
+    public function findAllBySprint(int $sprintId): array
     {
         return $this->getEntityManager()
             ->createQuery(sprintf('select us, s from %s u join %s us with us.id = u.id left join us.status s where %s', OrderedStories::class,UserStory::class, $this->parentCondition(isInBacklog: false)))
@@ -112,15 +112,33 @@ class UserStoryRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function computeStoryPointGroupByStatus(int $parent, $isInBacklog = true): StoryPointDetailDto
+    public function computeStoryPointByProjectBacklog(int $projectId): array
     {
-        $groupByCondition = $isInBacklog ? 'project' : 'sprint';
-        $points = $this->getEntityManager()
+        return $this->computeStoryPointGroupByStatus($projectId, true);
+    }
+
+    public function computeStoryPointBySprint(int $sprintId): array
+    {
+        return $this->computeStoryPointGroupByStatus($sprintId, false);
+    }
+
+    private function computeStoryPointGroupByStatus(int $parent, $InBacklog): array
+    {
+        return $this->getEntityManager()
             ->createQuery(
-                sprintf('select s.name, sum(u.storyPoint) points from %s u left join u.status s where %s group by u.%s, s', UserStory::class, $this->parentCondition(isInBacklog: $isInBacklog), $groupByCondition)
+                sprintf(
+                    "select 
+                                s.name as status, 
+                                sum(u.storyPoint) as point
+                            from App\Entity\StoryStatus s 
+                            left join App\Entity\UserStory u with s = u.status and %s 
+                            group by s.name, s.id
+                            order by s.id
+                            "
+                    , $this->parentCondition(isInBacklog: $InBacklog)
+                )
             )->setParameter(1, $parent)
             ->getResult();
-        return StoryPointDetailDto::mapFromArray($points);
     }
 
     private function parentCondition($alias = 'u', $isInBacklog = true): string

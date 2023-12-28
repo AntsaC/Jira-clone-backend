@@ -150,7 +150,10 @@ class ProjectControllerTest extends ApiTestCase
     public function testUpdateProjectWithId1() {
         self::createClient()->request('PUT', 'projects/1', [
             'json' => [
-                'name' => 'My project'
+                'name' => 'My project',
+                'type' => [
+                    'id' => 1
+                ]
             ]
         ]);
         self::assertResponseIsSuccessful();
@@ -159,5 +162,18 @@ class ProjectControllerTest extends ApiTestCase
         ]);
     }
 
+    public function testOneById()
+    {
+        self::createClient()->request('GET', 'projects/1');
+        self::assertResponseIsSuccessful();
+        self::assertJsonContains(["id" => 1]);
+    }
+
+    public function testOneByKey()
+    {
+        self::createClient()->request('GET', 'projects/PD1');
+        self::assertResponseIsSuccessful();
+        self::assertJsonContains(["key" => "PD1"]);
+    }
 
 }

@@ -51,6 +51,7 @@ class UserStory
         return $this;
     }
 
+
     public function getProject(): ?Project
     {
         return $this->project;

@@ -43,8 +43,25 @@ class ProjectController extends AbstractController
     {
         $currentProject = $this->repository->find($id);
         $currentProject->setName($project->getName());
+        $currentProject->setType($this->entityManager->getReference(ProjectType::class, $project->getType()->getId()));
         $this->entityManager->flush();
         return $this->json($currentProject);
+    }
+
+    #[Route('/{id}', requirements: ['id' => '\d+'], methods: ['GET'])]
+    public function oneById(int $id): JsonResponse
+    {
+        return $this->json(
+            $this->repository->find($id)
+        );
+    }
+
+    #[Route('/{key}', methods: ['GET'])]
+    public function oneByKey(string $key): JsonResponse
+    {
+        return $this->json(
+            $this->repository->findOneBy(['key' => $key])
+        );
     }
 
 }

@@ -59,7 +59,7 @@ values (1, 1, 'Project 1 first user story', 1, 5, null, 3),
        (5, 2, 'Project 2 first user story', 2, 4, null, 2),
        (3, 2, 'Project 2 user story', 2, 3, 5, null),
        (2, 1, 'Project 1 third user story', 1, 2, 1, 1),
-       (4, 3, 'Project 3 first user story', null, null, null, 1),
+       (4, 3, 'Project 3 first user story', null, 2, null, 1),
        (6, 1, 'Project 1 Create new task', 1, 3, 2, 3),
        (8, 1, 'Project 1 Add new product', null, 6, null, 2),
        (7, 1, 'Project 1 List products', null, 6, 8, 1);
