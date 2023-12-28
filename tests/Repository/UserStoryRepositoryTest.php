@@ -4,7 +4,6 @@ namespace App\Tests\Repository;
 
 use App\Dto\Input\MoveActionInput;
 use App\Dto\Input\PartialStory;
-use App\Entity\OrderedStories;
 use App\Entity\Sprint;
 use App\Entity\UserStory;
 use App\Repository\UserStoryRepository;
@@ -92,20 +91,38 @@ class UserStoryRepositoryTest extends KernelTestCase
         assertSame([8, 7], $storiesId);
     }
 
-    public function testComputeStoryPointGroupByStatus_GivenStoryIsInBacklog(): void {
-        $actual = $this->repository->computeStoryPointGroupByStatus(1);
-        self::assertEquals(0, $actual->done);
-        self::assertEquals(6, $actual->in_progress);
-        self::assertEquals(6, $actual->todo);
+    public function testComputeStoryPointByProjectBacklog(): void {
+        $actual = $this->repository->computeStoryPointByProjectBacklog(1);
+        self::assertContains([
+            'status' => 'TODO',
+            'point' => 6
+        ], $actual);
+        self::assertContains([
+            'status' => 'IN PROGRESS',
+            'point' => 6
+        ], $actual);
+        self::assertContains([
+            'status' => 'DONE',
+            'point' => null
+        ], $actual);
     }
 
-    public function testComputeStoryPointGroupByStatus_GivenStoryIsInSprint1(): void {
-        $actual = $this->repository->computeStoryPointGroupByStatus(1, isInBacklog: false);
-        self::assertEquals(8, $actual->done);
-        self::assertEquals(0, $actual->in_progress);
-        self::assertEquals(2, $actual->todo);
+    public function testComputeStoryPointBySprint(): void {
+        $actual = $this->repository->computeStoryPointBySprint(1);
+        self::assertContains([
+            'status' => 'TODO',
+            'point' => 2
+        ], $actual);
+        self::assertContains([
+            'status' => 'IN PROGRESS',
+            'point' => null
+        ], $actual);
+        self::assertContains([
+            'status' => 'DONE',
+            'point' => 8
+        ], $actual);
     }
-    
+
     public function testPartialUpdate_GivenPropertyIsSummary(): void {
         $story = new PartialStory('summary','Updated summary value');
         $currentStory = $this->repository->partialUpdate(1, $story);
