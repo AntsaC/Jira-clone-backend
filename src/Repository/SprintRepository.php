@@ -37,6 +37,7 @@ class SprintRepository extends ServiceEntityRepository
                 'case when s.endDate < :date then \'complete\' when :date < s.startDate then \'future\' when :date between s.startDate and s.endDate then \'current\' else \'unknown\' end as status'
             )
             ->where('s.project = ?1')
+            ->orderBy('s.startDate', 'desc')
             ->setParameter(1, $projectId)
             ->setParameter('date', date('Y-m-d'));
     }
