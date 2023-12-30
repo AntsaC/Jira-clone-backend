@@ -42,4 +42,15 @@ class CriteriaAcceptanceController extends AbstractController
         );
     }
 
+    #[Route('/user-stories/{userStoryId}/criteria/{id}', methods: ['PUT'])]
+    public function update(int $userStoryId, int $id, #[MapRequestPayload] CriteriaAcceptance $criteriaAcceptance): JsonResponse
+    {
+        return $this->json(
+            $this->repository->update($id, $criteriaAcceptance),
+            context: [
+                AbstractNormalizer::IGNORED_ATTRIBUTES => ['userStory']
+            ]
+        ) ;
+    }
+
 }

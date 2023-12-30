@@ -31,4 +31,17 @@ class CriteriaAcceptanceTest extends ApiTestCase
         self::assertResponseStatusCodeSame(201);
     }
 
+    public function testUpdate()
+    {
+        self::createClient()->request('PUT', '/user-stories/1/criteria/1', [
+            'json' => [
+                'criteria' => 'My criteria'
+            ]
+        ]);
+        self::assertResponseIsSuccessful();
+        self::assertJsonContains([
+            'criteria' => 'My criteria'
+        ]);
+    }
+
 }

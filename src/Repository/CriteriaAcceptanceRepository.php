@@ -36,4 +36,13 @@ class CriteriaAcceptanceRepository extends ServiceEntityRepository
         $this->getEntityManager()->persist($criteriaAcceptance);
         $this->getEntityManager()->flush();
     }
+
+    public function update(int $id, CriteriaAcceptance $criteriaAcceptance): ?CriteriaAcceptance
+    {
+        $criteria = $this->find($id);
+        $criteria->setCriteria($criteriaAcceptance->getCriteria());
+        $criteria->setChecked($criteriaAcceptance->isChecked());
+        $this->getEntityManager()->flush();
+        return $criteria;
+    }
 }
