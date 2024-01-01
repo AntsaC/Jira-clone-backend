@@ -13,16 +13,16 @@ class SprintControllerTest extends ApiTestCase
         $response = self::createClient()->request('GET','projects/1/sprints');
         $expected = [
             [
-                'sprint' => ['id' => 1],
-            ],
-            [
-                'sprint' => ['id' => 2],
+                'sprint' => ['id' => 6],
             ],
             [
                 'sprint' => ['id' => 3],
             ],
             [
-                'sprint' => ['id' => 6],
+                'sprint' => ['id' => 2],
+            ],
+            [
+                'sprint' => ['id' => 1],
             ],
         ];
         self::assertResponseIsSuccessful();
